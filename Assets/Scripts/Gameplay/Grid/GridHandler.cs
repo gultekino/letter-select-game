@@ -8,6 +8,7 @@ public class GridHandler : MonoBehaviour
     [SerializeField] Transform slotsParent;
 
     private List<Slot> slots = new List<Slot>();
+    
     public void InitializeGrid()
     {
         GridSpawner spawner = new GridSpawner();
@@ -29,5 +30,14 @@ public class GridHandler : MonoBehaviour
     private int GetIndex(Vector2 gridPosition)
     {
         return gridConfiguration.Row * (int)gridPosition.x + (int)gridPosition.y;
+    }
+
+    public void FillGridWithLetterCarriers()
+    {
+        foreach (var slot in slots)
+        {
+            slot.IsOccupied = true;
+            var letterCarrier = LetterManager.Instance.SpawnLetterCarrier(slot);
+        }
     }
 }

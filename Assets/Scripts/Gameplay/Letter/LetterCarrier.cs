@@ -1,26 +1,46 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class LetterCarrier : MonoBehaviour
+public class LetterCarrier : MonoBehaviour, ICarryable, ISelecable
 {
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private TMP_Text tmpText;
+    bool isGettingCarried = false;
 
-    private void OnMouseEnter()
+    public void OnMouseDown()
     {
-        TrySelectLetter();
+        TrySelect();
+    }
+    
+    public void TrySelect()
+    {
+        if (!isGettingCarried)
+            Select();
+    }
+    
+    public void Select()
+    {
+        LetterManager.Instance.LetterClicked(this);
+    }
+    
+    public void GetCarried(Vector2 carryingPos)
+    {
+        transform.position = carryingPos;
     }
 
-    private void TrySelectLetter()
+    public bool IsGettingCarried()
     {
-        
+        return isGettingCarried;
     }
 
-    void UpdateVisuals()
+    public bool IsSelectable()
     {
-        
+        return isGettingCarried;
+    }
+    
+    public void UpdateVisuals()
+    {
+        throw new NotImplementedException();
     }
 }

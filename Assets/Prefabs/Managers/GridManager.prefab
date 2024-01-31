@@ -45,12 +45,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gridConfiguration:
-    slotType: 0
     row: 7
     column: 1
     gridPosition: {x: 0, y: -5}
   slotPrefab: {fileID: 3248575299048764812, guid: 9e338eed39c9f467fbe258a203db2df1, type: 3}
   slotsParent: {fileID: 0}
+  letterCarrierPrefab: {fileID: 4818457391704254751, guid: b6889b97c004041f98d940e5f14b10de, type: 3}
 --- !u!1 &3980278679605779518
 GameObject:
   m_ObjectHideFlags: 0
@@ -147,12 +147,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gridConfiguration:
-    slotType: 0
     row: 5
     column: 1
     gridPosition: {x: 0, y: -8}
   slotPrefab: {fileID: 3248575299048764812, guid: 9e338eed39c9f467fbe258a203db2df1, type: 3}
   slotsParent: {fileID: 0}
+  letterCarrierPrefab: {fileID: 4818457391704254751, guid: b6889b97c004041f98d940e5f14b10de, type: 3}
 --- !u!1 &4173343413543491916
 GameObject:
   m_ObjectHideFlags: 0
@@ -198,9 +198,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gridConfiguration:
-    slotType: 0
     row: 5
     column: 5
     gridPosition: {x: 0, y: 0}
   slotPrefab: {fileID: 3248575299048764812, guid: 9e338eed39c9f467fbe258a203db2df1, type: 3}
   slotsParent: {fileID: 0}
+  letterCarrierPrefab: {fileID: 4818457391704254751, guid: b6889b97c004041f98d940e5f14b10de, type: 3}
