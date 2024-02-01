@@ -40,4 +40,15 @@ public class GridHandler : MonoBehaviour
             var letterCarrier = LetterManager.Instance.SpawnLetterCarrier(slot);
         }
     }
+
+    public Slot GetEmptySlot()
+    {
+        foreach (var slot in slots)
+        {
+            if (!slot.IsOccupied)
+                return slot;
+        }
+
+        return null;
+    }
 }

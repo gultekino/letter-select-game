@@ -43,4 +43,9 @@ public class LetterCarrier : MonoBehaviour, ICarryable, ISelecable
     {
         throw new NotImplementedException();
     }
+    
+    public char GetLetterCarrying()
+    {
+        return tmpText.text[0];
+    }
 }

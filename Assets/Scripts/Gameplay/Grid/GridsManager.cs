@@ -32,14 +32,29 @@
             }
         }
 
-        private void LetterClicked(LetterCarrier letterCarrier)
+        private void LetterClicked(LetterCarrier letterCarrier, Action<LetterCarrier,Slot> callback)
         {
-            //Check if letterCarrier is in gridA
-            LetterManager.Instance.LetterGetsCarried(gridB.GetSlot(Vector2.zero), letterCarrier);
+            var slot = gridB.GetEmptySlot();
+            if (slot == null) 
+                return;
+            slot .IsOccupied = true;
+            callback(letterCarrier,slot);
         }
 
         private void OnDisable()
         {
             LetterManager.Instance.OnLetterClicked -= LetterClicked;
+        }
+
+        public GridHandler GetGoalGridHandler()
+        {
+            return gridC;
+        }
+
+        public void LetterPartOfGoalSelected(LetterCarrier letterCarrier, int indexOfLetter)
+        {
+            var slot = gridC.GetSlot(new Vector2(0, indexOfLetter));
+            slot.IsOccupied = true;
+            letterCarrier.GetCarried(slot.WorldPosition);
         }
     }

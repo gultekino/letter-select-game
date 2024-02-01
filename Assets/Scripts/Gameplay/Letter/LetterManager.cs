@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class LetterManager : Singleton<LetterManager>
 {
-    
-    public event Action<LetterCarrier> OnLetterClicked;
+    public event Action<LetterCarrier,Action<LetterCarrier,Slot>> OnLetterClicked;
+    public event Action<LetterCarrier,Action<LetterCarrier,int>> OnLetterSelected;
+
     [SerializeField] LetterCarrier letterCarrierPrefab;
     
     public LetterCarrier SpawnLetterCarrier(Slot slot)
@@ -25,9 +26,20 @@ public class LetterManager : Singleton<LetterManager>
 
     public void LetterClicked(LetterCarrier letterCarrier)
     {
-        OnLetterClicked?.Invoke(letterCarrier);
+        OnLetterClicked?.Invoke(letterCarrier,LetterSelected);
     }
-    
+
+    private void LetterSelected(LetterCarrier letterCarrier,Slot carryingSlot)
+    {
+        letterCarrier.GetCarried(carryingSlot.WorldPosition);
+        OnLetterSelected?.Invoke(letterCarrier,LetterNeededByGoal);
+    }
+
+    private void LetterNeededByGoal(LetterCarrier letterCarrier, int indexOfLetter)
+    {
+        
+    }
+
     public void LetterGetsCarried(Slot carryingSlot, LetterCarrier letterCarrier)
     {
         letterCarrier.GetCarried(carryingSlot.WorldPosition);

@@ -434,6 +434,10 @@ PrefabInstance:
       propertyPath: slotsParent
       value: 
       objectReference: {fileID: 1732660452}
+    - target: {fileID: 6077540727306205023, guid: c6ec754d02f0c48e39b693c252d40780, type: 3}
+      propertyPath: currentGoal
+      value: TTLFTLLPF
+      objectReference: {fileID: 0}
     - target: {fileID: 7202902277800980247, guid: c6ec754d02f0c48e39b693c252d40780, type: 3}
       propertyPath: slotsParent
       value: 
