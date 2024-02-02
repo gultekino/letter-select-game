@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class LetterManager : Singleton<LetterManager>
 {
-    public event Action<LetterCarrier,Action<LetterCarrier,Slot>> OnLetterClicked;
+    public event Action<LetterCarrier> OnLetterClicked;
     public event Action<LetterCarrier,Action<LetterCarrier,int>> OnLetterSelected;
 
     [SerializeField] LetterCarrier letterCarrierPrefab;
@@ -12,7 +12,7 @@ public class LetterManager : Singleton<LetterManager>
     public LetterCarrier SpawnLetterCarrier(Slot slot)
     {
         var letterCarrier = Instantiate(letterCarrierPrefab);
-        letterCarrier.GetCarried(slot.WorldPosition);
+        letterCarrier.GetCarried(slot);
         return letterCarrier;
     }
     
@@ -26,12 +26,14 @@ public class LetterManager : Singleton<LetterManager>
 
     public void LetterClicked(LetterCarrier letterCarrier)
     {
-        OnLetterClicked?.Invoke(letterCarrier,LetterSelected);
+        OnLetterClicked?.Invoke(letterCarrier);
     }
 
-    private void LetterSelected(LetterCarrier letterCarrier,Slot carryingSlot)
+    public void MoveLetterGridB(LetterCarrier letterCarrier,Slot carryingSlot)
     {
-        letterCarrier.GetCarried(carryingSlot.WorldPosition);
+        GridsManager.Instance.EmptyASlot(letterCarrier.CarryingSlot);
+        letterCarrier.GetCarried(carryingSlot);
+        carryingSlot.IsOccupied = true;
         OnLetterSelected?.Invoke(letterCarrier,LetterNeededByGoal);
     }
 
@@ -42,6 +44,6 @@ public class LetterManager : Singleton<LetterManager>
 
     public void LetterGetsCarried(Slot carryingSlot, LetterCarrier letterCarrier)
     {
-        letterCarrier.GetCarried(carryingSlot.WorldPosition);
+        letterCarrier.GetCarried(carryingSlot);
     }
 }

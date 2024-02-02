@@ -6,13 +6,14 @@ public class GridHandler : MonoBehaviour
     [SerializeField] GridConfiguration gridConfiguration;
     [SerializeField] GameObject slotPrefab;
     [SerializeField] Transform slotsParent;
+    [SerializeField] private SlotLocation slotLocation;
 
     private List<Slot> slots = new List<Slot>();
     
     public void InitializeGrid()
     {
         GridSpawner spawner = new GridSpawner();
-        slots = spawner.SpawnGrid(gridConfiguration, slotPrefab ,slotsParent);
+        slots = spawner.SpawnGrid(gridConfiguration, slotPrefab ,slotsParent,slotLocation);
     }
     
     public Slot GetSlot(Vector2 gridPosition)

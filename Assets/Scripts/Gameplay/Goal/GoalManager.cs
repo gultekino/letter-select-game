@@ -27,12 +27,17 @@
         private void LetterSelected(LetterCarrier letterCarrier, Action<LetterCarrier, int> callBack)
         {
             var letterCarrying = letterCarrier.GetLetterCarrying();
-            var indexesOfLetter = currentLevelGoal.goalWord.AllIndexesOf(letterCarrying);
-            if(!indexesOfLetter.Any())
+            var indexesOfLetter = currentLevelGoal.goalWord.AllIndexesOf(letterCarrying); //Is letter in current goal word?
+            if(indexesOfLetter.Count() == 0)
                 return;
 
-            var indexOfLetter = indexesOfLetter.First(t=>currentLevelGoal.lettersStatus[t]==LetterStatus.LetterEmpty);
-            currentLevelGoal.lettersStatus[indexOfLetter] = LetterStatus.LetterFilled;
-            GridsManager.Instance.LetterPartOfGoalSelected(letterCarrier, indexOfLetter);
+            var indexesOfNotFilledLettersInGoal =
+                indexesOfLetter.Where(t => currentLevelGoal.lettersStatus[t] == LetterStatus.LetterEmpty); //Is letters already filled?
+            if (!indexesOfNotFilledLettersInGoal.Any())
+                return;
+            
+            var index = indexesOfNotFilledLettersInGoal.First();
+            currentLevelGoal.lettersStatus[index] = LetterStatus.LetterFilled;
+            GridsManager.Instance.LetterNeededByGoal(letterCarrier, index);
         }
     }

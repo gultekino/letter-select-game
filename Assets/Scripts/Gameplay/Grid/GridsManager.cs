@@ -32,13 +32,12 @@
             }
         }
 
-        private void LetterClicked(LetterCarrier letterCarrier, Action<LetterCarrier,Slot> callback)
+        private void LetterClicked(LetterCarrier letterCarrier)
         {
-            var slot = gridB.GetEmptySlot();
-            if (slot == null) 
+            var emptySlot = gridB.GetEmptySlot();
+            if (emptySlot == null)
                 return;
-            slot .IsOccupied = true;
-            callback(letterCarrier,slot);
+            LetterManager.Instance.MoveLetterGridB(letterCarrier, emptySlot);
         }
 
         private void OnDisable()
@@ -51,16 +50,22 @@
             return gridC;
         }
 
-        public void LetterPartOfGoalSelected(LetterCarrier letterCarrier, int indexOfLetter)
+        public void LetterNeededByGoal(LetterCarrier letterCarrier, int indexOfLetter)
         {
+            letterCarrier.CarryingSlot.IsOccupied = false;
             var slot = gridC.GetSlot(new Vector2(0, indexOfLetter));
             slot.IsOccupied = true;
-            letterCarrier.GetCarried(slot.WorldPosition);
+            letterCarrier.GetCarried(slot);
         }
 
         public void SetGoalGrid(int goalLength)
         {
             //gridC.SetGridConfiguration(new GridConfiguration(1, goalLength));
             gridC.InitializeGrid();
+        }
+
+        public void EmptyASlot(Slot slot)
+        {
+            slot.EmptySlot();
         }
     }
