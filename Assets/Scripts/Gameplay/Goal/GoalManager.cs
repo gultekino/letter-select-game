@@ -2,32 +2,21 @@
     using System.Linq;
     using UnityEngine;
 
-    public class Goal
-    {
-        public LetterStatus[] lettersStatus;
-       public  string goalWord;
-
-        public Goal(string GoalWord)
-        {
-            goalWord = GoalWord;
-            lettersStatus = new LetterStatus[GoalWord.Length];
-        }
-    }
-
-    public enum LetterStatus
-    {
-        Default=-1,
-        LetterEmpty,
-        LetterFilled
-    }
-
+    
     public class GoalManager : Singleton<GoalManager>
     {
-        Goal currentGoal = new Goal("LMALOWTFISECONOMY");
+        LevelGoal currentLevelGoal;
 
         private void Start()
         {
+            LevelManager.Instance.OnLevelStart += LevelStart;
             LetterManager.Instance.OnLetterSelected += LetterSelected;
+        }
+
+        private void LevelStart()
+        {
+            currentLevelGoal = new LevelGoal(LevelManager.Instance.TryGetGoalWord());
+            GridsManager.Instance.SetGoalGrid(currentLevelGoal.goalWord.Length);
         }
 
         private void OnDisable()
@@ -37,12 +26,13 @@
 
         private void LetterSelected(LetterCarrier letterCarrier, Action<LetterCarrier, int> callBack)
         {
-            var indexesOfLetter = currentGoal.goalWord.AllIndexesOf(letterCarrier.GetLetterCarrying()); 
-            if (!indexesOfLetter.Any())
+            var letterCarrying = letterCarrier.GetLetterCarrying();
+            var indexesOfLetter = currentLevelGoal.goalWord.AllIndexesOf(letterCarrying);
+            if(!indexesOfLetter.Any())
                 return;
 
-            var indexOfLetter = indexesOfLetter.First(t=>currentGoal.lettersStatus[t]==LetterStatus.LetterEmpty);
-            currentGoal.lettersStatus[indexOfLetter] = LetterStatus.LetterFilled;
+            var indexOfLetter = indexesOfLetter.First(t=>currentLevelGoal.lettersStatus[t]==LetterStatus.LetterEmpty);
+            currentLevelGoal.lettersStatus[indexOfLetter] = LetterStatus.LetterFilled;
             GridsManager.Instance.LetterPartOfGoalSelected(letterCarrier, indexOfLetter);
         }
     }

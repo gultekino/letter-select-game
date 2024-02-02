@@ -57,4 +57,10 @@
             slot.IsOccupied = true;
             letterCarrier.GetCarried(slot.WorldPosition);
         }
+
+        public void SetGoalGrid(int goalLength)
+        {
+            //gridC.SetGridConfiguration(new GridConfiguration(1, goalLength));
+            gridC.InitializeGrid();
+        }
     }
