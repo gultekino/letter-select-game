@@ -1,12 +1,5 @@
 using UnityEngine;
 
-public enum SlotLocation
-{
-    Default=-1,
-    GridA,
-    GridB,
-    GridC
-}
 public class Slot
 {
     private Vector2 cords;
@@ -20,11 +13,7 @@ public class Slot
     }
 
     public Vector2 Cords => cords;
-    public bool IsOccupied
-    {
-        get => isOccupied;
-        set => isOccupied = value;
-    }
+    public bool IsOccupied=> isOccupied;
 
     public Vector3 WorldPosition { get; set; }
 
@@ -40,5 +29,14 @@ public class Slot
     {
         isOccupied = false;
         carryable = null;
+    }
+
+    public void CarryItem(ICarryable carryable)
+    {
+        if (isOccupied)
+            Debug.Log("You are trying to carry an item to an occupied slot!"); 
+
+        this.carryable = carryable;
+        isOccupied = true;
     }
 }

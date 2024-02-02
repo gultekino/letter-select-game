@@ -52,9 +52,9 @@
 
         public void LetterNeededByGoal(LetterCarrier letterCarrier, int indexOfLetter)
         {
-            letterCarrier.CarryingSlot.IsOccupied = false;
+            letterCarrier.CarryingSlot.EmptySlot();
             var slot = gridC.GetSlot(new Vector2(0, indexOfLetter));
-            slot.IsOccupied = true;
+            slot.CarryItem(letterCarrier);
             letterCarrier.GetCarried(slot);
         }
 

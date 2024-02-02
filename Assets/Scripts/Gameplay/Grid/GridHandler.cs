@@ -21,12 +21,6 @@ public class GridHandler : MonoBehaviour
         int index = GetIndex(gridPosition);
         return slots[index];
     }
-    
-    public void SetOccupation(Vector2 gridPosition, bool isOccupied)
-    {
-        int index = GetIndex(gridPosition);
-        slots[index].IsOccupied = isOccupied;
-    }
 
     private int GetIndex(Vector2 gridPosition)
     {
@@ -37,8 +31,8 @@ public class GridHandler : MonoBehaviour
     {
         foreach (var slot in slots)
         {
-            slot.IsOccupied = true;
             var letterCarrier = LetterManager.Instance.SpawnLetterCarrier(slot);
+            slot.CarryItem(letterCarrier);
         }
     }
 

@@ -33,7 +33,7 @@ public class LetterManager : Singleton<LetterManager>
     {
         GridsManager.Instance.EmptyASlot(letterCarrier.CarryingSlot);
         letterCarrier.GetCarried(carryingSlot);
-        carryingSlot.IsOccupied = true;
+        carryingSlot.CarryItem(letterCarrier);
         OnLetterSelected?.Invoke(letterCarrier,LetterNeededByGoal);
     }
 
