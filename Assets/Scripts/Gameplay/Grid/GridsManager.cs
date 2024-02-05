@@ -12,9 +12,10 @@
         protected override void Awake()
         {
             base.Awake();
-            InitializeGrids();
             gridA = gridHandlers[0];
+            gridA.InitializeGrid();
             gridB = gridHandlers[1];
+            gridB.InitializeGrid();
             gridC = gridHandlers[2];
             gridA.FillGridWithLetterCarriers();
         }
@@ -22,14 +23,6 @@
         private void OnEnable()
         {
             LetterManager.Instance.OnLetterClicked += LetterClicked;
-        }
-
-        private void InitializeGrids()
-        {
-            foreach (var gridHandler in gridHandlers)
-            {
-                gridHandler.InitializeGrid();
-            }
         }
 
         private void LetterClicked(LetterCarrier letterCarrier)
@@ -40,6 +33,8 @@
             LetterManager.Instance.MoveLetterGridB(letterCarrier, emptySlot);
         }
 
+        public int GetGridBEmptySlotCount() => gridB.GetEmptySlotsCount();
+        
         private void OnDisable()
         {
             LetterManager.Instance.OnLetterClicked -= LetterClicked;
@@ -60,12 +55,16 @@
 
         public void SetGoalGrid(int goalLength)
         {
-            //gridC.SetGridConfiguration(new GridConfiguration(1, goalLength));
-            gridC.InitializeGrid();
+            gridC.InitializeGrid(goalLength);
         }
 
         public void EmptyASlot(Slot slot)
         {
             slot.EmptySlot();
+        }
+
+        public void ClearGoalGrid()
+        {
+            gridC.ClearGrid();
         }
     }

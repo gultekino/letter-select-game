@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class GridHandler : MonoBehaviour
@@ -10,8 +11,12 @@ public class GridHandler : MonoBehaviour
 
     private List<Slot> slots = new List<Slot>();
     
-    public void InitializeGrid()
+    public void InitializeGrid(int row = -1)
     {
+        if (row!=-1){
+            gridConfiguration.Row = row;
+            slotsParent = new GameObject("CGridSlotHolder").transform;
+        }
         GridSpawner spawner = new GridSpawner();
         slots = spawner.SpawnGrid(gridConfiguration, slotPrefab ,slotsParent,slotLocation);
     }
@@ -45,5 +50,14 @@ public class GridHandler : MonoBehaviour
         }
 
         return null;
+    }
+    
+    public int GetEmptySlotsCount()
+    {
+        return slots.Count(slot => !slot.IsOccupied);
+    }
+
+    public void ClearGrid()
+    {
     }
 }

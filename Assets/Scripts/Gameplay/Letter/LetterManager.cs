@@ -5,7 +5,7 @@ using UnityEngine;
 public class LetterManager : Singleton<LetterManager>
 {
     public event Action<LetterCarrier> OnLetterClicked;
-    public event Action<LetterCarrier,Action<LetterCarrier,int>> OnLetterSelected;
+    public event Action<LetterCarrier> OnLetterSelected;
 
     [SerializeField] LetterCarrier letterCarrierPrefab;
     
@@ -34,7 +34,7 @@ public class LetterManager : Singleton<LetterManager>
         GridsManager.Instance.EmptyASlot(letterCarrier.CarryingSlot);
         letterCarrier.GetCarried(carryingSlot);
         carryingSlot.CarryItem(letterCarrier);
-        OnLetterSelected?.Invoke(letterCarrier,LetterNeededByGoal);
+        OnLetterSelected?.Invoke(letterCarrier);
     }
 
     private void LetterNeededByGoal(LetterCarrier letterCarrier, int indexOfLetter)
