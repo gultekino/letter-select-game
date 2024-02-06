@@ -1,21 +1,24 @@
     using System;
     using System.Collections.Generic;
+    using DG.Tweening;
     using UnityEngine;
+    using UnityEngine.Serialization;
 
     public class GridsManager : Singleton<GridsManager>
     {
         [SerializeField] List<GridHandler> gridHandlers;
+        [SerializeField] private GoalGridHandler goalGridHandler;
+        [SerializeField] SmallGoalGridManager smallGoalGridManager;
         private GridHandler gridA;
         private GridHandler gridB;
-        private GridHandler gridC;
 
         protected override void Awake()
         {
             base.Awake();
-            InitializeGrids();
             gridA = gridHandlers[0];
+            gridA.InitializeGrid();
             gridB = gridHandlers[1];
-            gridC = gridHandlers[2];
+            gridB.InitializeGrid();
             gridA.FillGridWithLetterCarriers();
         }
 
@@ -24,37 +27,40 @@
             LetterManager.Instance.OnLetterClicked += LetterClicked;
         }
 
-        private void InitializeGrids()
+        private void LetterClicked(LetterCarrier letterCarrier)
         {
-            foreach (var gridHandler in gridHandlers)
-            {
-                gridHandler.InitializeGrid();
-            }
-        }
-
-        private void LetterClicked(LetterCarrier letterCarrier, Action<LetterCarrier,Slot> callback)
-        {
-            var slot = gridB.GetEmptySlot();
-            if (slot == null) 
+            var emptySlot = gridB.GetEmptySlot();
+            
+            if (emptySlot == null)
                 return;
-            slot .IsOccupied = true;
-            callback(letterCarrier,slot);
+            if (GoalManager.Instance.PartOfTheGoal(letterCarrier))
+                return;
+            
+            LetterManager.Instance.MoveLetterGridB(letterCarrier, emptySlot);
         }
 
+        public int GetGridBEmptySlotCount() => gridB.GetEmptySlotsCount();
+        
         private void OnDisable()
         {
             LetterManager.Instance.OnLetterClicked -= LetterClicked;
         }
 
-        public GridHandler GetGoalGridHandler()
+        public void LetterNeededByGoal(LetterCarrier letterCarrier, int indexOfLetter)
         {
-            return gridC;
+            letterCarrier.CarryingSlot.EmptySlot();
+            var slot = goalGridHandler.GetSlot(new Vector2(0, indexOfLetter));
+            slot.CarryItem(letterCarrier);
+            letterCarrier.GetCarried(slot);
         }
 
-        public void LetterPartOfGoalSelected(LetterCarrier letterCarrier, int indexOfLetter)
+        public void PrepareGridForGoalWord(int goalLength)
         {
-            var slot = gridC.GetSlot(new Vector2(0, indexOfLetter));
-            slot.IsOccupied = true;
-            letterCarrier.GetCarried(slot.WorldPosition);
+            goalGridHandler.InitializeGrid(goalLength);
+        }
+
+        public void EmptyASlot(Slot slot)
+        {
+            slot.EmptySlot();
         }
     }

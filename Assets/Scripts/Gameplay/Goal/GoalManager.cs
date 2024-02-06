@@ -1,48 +1,65 @@
-    using System;
-    using System.Linq;
-    using UnityEngine;
+using System;
+using System.Linq;
+using UnityEngine;
 
-    public class Goal
+public class GoalManager : Singleton<GoalManager>
+{
+    private LevelGoal activeGoal;
+    public event Action<int> OnGoalWordCompleted;
+
+    private void Start()
     {
-        public LetterStatus[] lettersStatus;
-       public  string goalWord;
-
-        public Goal(string GoalWord)
-        {
-            goalWord = GoalWord;
-            lettersStatus = new LetterStatus[GoalWord.Length];
-        }
+        LevelManager.Instance.OnLevelStarted += OnLevelStarted;
     }
 
-    public enum LetterStatus
+    private void OnLevelStarted()
     {
-        Default=-1,
-        LetterEmpty,
-        LetterFilled
+        var (goalWord, goalIndex) = LevelManager.Instance.GetNextGoalWord();
+        activeGoal = new LevelGoal(goalWord, goalIndex);
+        GridsManager.Instance.PrepareGridForGoalWord(goalWord.Length);
     }
 
-    public class GoalManager : Singleton<GoalManager>
+    private void OnDisable()
     {
-        Goal currentGoal = new Goal("LMALOWTFISECONOMY");
-
-        private void Start()
-        {
-            LetterManager.Instance.OnLetterSelected += LetterSelected;
-        }
-
-        private void OnDisable()
-        {
-            LetterManager.Instance.OnLetterSelected -= LetterSelected;
-        }
-
-        private void LetterSelected(LetterCarrier letterCarrier, Action<LetterCarrier, int> callBack)
-        {
-            var indexesOfLetter = currentGoal.goalWord.AllIndexesOf(letterCarrier.GetLetterCarrying()); 
-            if (!indexesOfLetter.Any())
-                return;
-
-            var indexOfLetter = indexesOfLetter.First(t=>currentGoal.lettersStatus[t]==LetterStatus.LetterEmpty);
-            currentGoal.lettersStatus[indexOfLetter] = LetterStatus.LetterFilled;
-            GridsManager.Instance.LetterPartOfGoalSelected(letterCarrier, indexOfLetter);
-        }
+        LevelManager.Instance.OnLevelStarted -= OnLevelStarted;
     }
+
+    private bool LetterSelected(LetterCarrier chosenLetter)
+    {
+        var letter = chosenLetter.GetLetterCarrying();
+        var goalWordLetterPositions = activeGoal.goalWord.AllIndexesOf(letter);
+        if (!goalWordLetterPositions.Any()) return false;
+
+        var unfilledPositions = goalWordLetterPositions
+            .Where(position => activeGoal.lettersStatus[position] == LetterStatus.Empty);
+
+        if (!unfilledPositions.Any()) return false;
+
+        var positionToFill = unfilledPositions.First();
+        activeGoal.lettersStatus[positionToFill] = LetterStatus.Filled;
+        GridsManager.Instance.LetterNeededByGoal(chosenLetter, positionToFill);
+
+        if (activeGoal.lettersStatus.All(status => status == LetterStatus.Filled))
+        {
+            LetterManager.Instance.MoveLettersToPos();
+            OnGoalWordCompleted?.Invoke(activeGoal.wordIndexOnLevel);
+            SetUpNextGoal();
+        }
+
+        return true;
+    }
+
+    private void SetUpNextGoal()
+    {
+        var (nextGoalWord, nextGoalIndex) = LevelManager.Instance.GetNextGoalWord();
+        if (nextGoalWord == null) return;
+
+        activeGoal = new LevelGoal(nextGoalWord, nextGoalIndex);
+        GridsManager.Instance.PrepareGridForGoalWord(nextGoalWord.Length);
+    }
+
+    public bool PartOfTheGoal(LetterCarrier letterCarrier)
+    {
+        return LetterSelected(letterCarrier);
+    }
+}

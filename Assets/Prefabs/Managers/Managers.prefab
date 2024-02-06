@@ -44,7 +44,51 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a7edfad47214f1d90948bba8caa0ed5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  goal: LLLLL
+--- !u!1 &3072258576779545771
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2466090458399185066}
+  - component: {fileID: 7428199298893380188}
+  m_Layer: 0
+  m_Name: LevelManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2466090458399185066
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3072258576779545771}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 822324277011112391}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7428199298893380188
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3072258576779545771}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dba3b464aeb7490d9c4a986968540b73, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  levelDataSO: {fileID: 11400000, guid: b9f051376039c428c9e977e4a1ff7090, type: 2}
 --- !u!1 &4109164070736646348
 GameObject:
   m_ObjectHideFlags: 0
@@ -74,6 +118,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 2466090458399185066}
   - {fileID: 3995632665023488468}
   - {fileID: 3426497115947114726}
   - {fileID: 2124752671034524560}
@@ -175,6 +220,10 @@ PrefabInstance:
     - target: {fileID: 3980278679605779518, guid: ab124276866d344f4a730b2a3e4cda9b, type: 3}
       propertyPath: m_Name
       value: GridManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 4160496137448331532, guid: ab124276866d344f4a730b2a3e4cda9b, type: 3}
+      propertyPath: m_Name
+      value: GoalGridHandler
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

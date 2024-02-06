@@ -6,6 +6,13 @@ public class LetterCarrier : MonoBehaviour, ICarryable, ISelecable
 {
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private TMP_Text tmpText;
+    Slot carryingSlot;
+    public Slot CarryingSlot
+    {
+        get => carryingSlot;
+        set => carryingSlot = value;
+    }
+    
     bool isGettingCarried = false;
 
     public void OnMouseDown()
@@ -15,7 +22,7 @@ public class LetterCarrier : MonoBehaviour, ICarryable, ISelecable
     
     public void TrySelect()
     {
-        if (!isGettingCarried)
+        if (carryingSlot.SlotLocation == SlotLocation.GridA)
             Select();
     }
     
@@ -24,9 +31,11 @@ public class LetterCarrier : MonoBehaviour, ICarryable, ISelecable
         LetterManager.Instance.LetterClicked(this);
     }
     
-    public void GetCarried(Vector2 carryingPos)
+    public void GetCarried(Slot carryingSlot)
     {
-        transform.position = carryingPos;
+        this.carryingSlot = carryingSlot;
+        isGettingCarried = true;
+        transform.position = carryingSlot.WorldPosition;
     }
 
     public bool IsGettingCarried()
@@ -41,7 +50,6 @@ public class LetterCarrier : MonoBehaviour, ICarryable, ISelecable
     
     public void UpdateVisuals()
     {
-        throw new NotImplementedException();
     }
     
     public char GetLetterCarrying()
