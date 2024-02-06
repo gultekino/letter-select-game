@@ -51,6 +51,57 @@ MonoBehaviour:
   slotPrefab: {fileID: 3248575299048764812, guid: 9e338eed39c9f467fbe258a203db2df1, type: 3}
   slotsParent: {fileID: 0}
   slotLocation: 1
+--- !u!1 &3076093436815999652
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6256886484173399915}
+  - component: {fileID: 277494717811666924}
+  m_Layer: 0
+  m_Name: SmallGoalGridManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6256886484173399915
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3076093436815999652}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2451362724627969608}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &277494717811666924
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3076093436815999652}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40883f4d495c409cbdbf284429bca5cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  smallGoalGrid: {fileID: 0}
+  smallGoalPrefab: {fileID: 0}
+  smallGoalGridSize: 0
+  smallGoalGridSpacing: 0
+  smallGoalGridOffset: 0
+  smallGoalGridYOffset: 0
+  smallGoalGridLocation: {x: -20, y: -20, z: 0}
 --- !u!1 &3980278679605779518
 GameObject:
   m_ObjectHideFlags: 0
@@ -84,6 +135,7 @@ Transform:
   - {fileID: 3591610713923617439}
   - {fileID: 8748559458930265864}
   - {fileID: 5526698790249900021}
+  - {fileID: 6256886484173399915}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6874176170264483517
@@ -101,7 +153,8 @@ MonoBehaviour:
   gridHandlers:
   - {fileID: 8539513882326382731}
   - {fileID: 3618555135506301512}
-  - {fileID: 3023786803492881222}
+  goalGridHandler: {fileID: 6674770528137433680}
+  smallGoalGridManager: {fileID: 277494717811666924}
 --- !u!1 &4160496137448331532
 GameObject:
   m_ObjectHideFlags: 0
@@ -111,7 +164,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5526698790249900021}
-  - component: {fileID: 3023786803492881222}
+  - component: {fileID: 6674770528137433680}
   m_Layer: 0
   m_Name: GridHandlerC
   m_TagString: Untagged
@@ -134,7 +187,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2451362724627969608}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3023786803492881222
+--- !u!114 &6674770528137433680
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -143,7 +196,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 4160496137448331532}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 450a4593d5174586b3f57e227fc52c8b, type: 3}
+  m_Script: {fileID: 11500000, guid: c7776d1022fc4ed5823bc2afa3e4c035, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   gridConfiguration:

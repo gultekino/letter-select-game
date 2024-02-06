@@ -60,4 +60,13 @@ public class GridHandler : MonoBehaviour
     public void ClearGrid()
     {
     }
+
+    public void MoveLettersToPos()
+    {
+        slotsParent.transform.position = new Vector3(0, -20, 0);
+        foreach (var slot in slots)
+        {
+            slot.Carryable.GetCarried(slot);
+        }
+    }
 }

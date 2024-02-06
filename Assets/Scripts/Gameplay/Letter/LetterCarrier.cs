@@ -50,7 +50,6 @@ public class LetterCarrier : MonoBehaviour, ICarryable, ISelecable
     
     public void UpdateVisuals()
     {
-        throw new NotImplementedException();
     }
     
     public char GetLetterCarrying()

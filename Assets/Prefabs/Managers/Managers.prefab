@@ -221,6 +221,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: GridManager
       objectReference: {fileID: 0}
+    - target: {fileID: 4160496137448331532, guid: ab124276866d344f4a730b2a3e4cda9b, type: 3}
+      propertyPath: m_Name
+      value: GoalGridHandler
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

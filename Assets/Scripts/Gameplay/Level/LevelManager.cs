@@ -10,15 +10,14 @@ public class LevelManager : Singleton<LevelManager>
     private LevelData levelData => levelDataSO.levelData;
     
     LevelProgress currentLevelProgress;
-    public event Action OnLevelStart;
+    public event Action OnLevelStarted;
     
     IEnumerator Start()
     {
         currentLevelProgress = new LevelProgress(levelData.GoalWords.Count);
         yield return null; // wait for other managers to subscribe to the event
-        OnLevelStart?.Invoke();
+        OnLevelStarted?.Invoke();
         GoalManager.Instance.OnGoalWordCompleted += WordCompleted;
-        LetterManager.Instance.OnLetterSelected += LetterSelected;
     }
 
     private void LetterSelected(LetterCarrier arg1) //Game end condition
@@ -27,7 +26,7 @@ public class LevelManager : Singleton<LevelManager>
             Debug.Log("No empty slots in grid B");
     }
 
-    public (string,int) TryGetGoalWord()
+    public (string,int) GetNextGoalWord()
     {
         var wordIndex = currentLevelProgress.GetNonCompeteWordIndex();
         if (wordIndex == -1)

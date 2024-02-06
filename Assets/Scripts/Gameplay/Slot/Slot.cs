@@ -4,8 +4,9 @@ public class Slot
 {
     private Vector2 cords;
     private bool isOccupied;
-    private ICarryable carryable;
     public SlotLocation SlotLocation { get; set; }
+    
+    private ICarryable carryable;
     public ICarryable Carryable
     {
         get => carryable;

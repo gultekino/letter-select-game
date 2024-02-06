@@ -1,13 +1,16 @@
     using System;
     using System.Collections.Generic;
+    using DG.Tweening;
     using UnityEngine;
+    using UnityEngine.Serialization;
 
     public class GridsManager : Singleton<GridsManager>
     {
         [SerializeField] List<GridHandler> gridHandlers;
+        [SerializeField] private GoalGridHandler goalGridHandler;
+        [SerializeField] SmallGoalGridManager smallGoalGridManager;
         private GridHandler gridA;
         private GridHandler gridB;
-        private GridHandler gridC;
 
         protected override void Awake()
         {
@@ -16,7 +19,6 @@
             gridA.InitializeGrid();
             gridB = gridHandlers[1];
             gridB.InitializeGrid();
-            gridC = gridHandlers[2];
             gridA.FillGridWithLetterCarriers();
         }
 
@@ -28,8 +30,12 @@
         private void LetterClicked(LetterCarrier letterCarrier)
         {
             var emptySlot = gridB.GetEmptySlot();
+            
             if (emptySlot == null)
                 return;
+            if (GoalManager.Instance.PartOfTheGoal(letterCarrier))
+                return;
+            
             LetterManager.Instance.MoveLetterGridB(letterCarrier, emptySlot);
         }
 
@@ -40,31 +46,21 @@
             LetterManager.Instance.OnLetterClicked -= LetterClicked;
         }
 
-        public GridHandler GetGoalGridHandler()
-        {
-            return gridC;
-        }
-
         public void LetterNeededByGoal(LetterCarrier letterCarrier, int indexOfLetter)
         {
             letterCarrier.CarryingSlot.EmptySlot();
-            var slot = gridC.GetSlot(new Vector2(0, indexOfLetter));
+            var slot = goalGridHandler.GetSlot(new Vector2(0, indexOfLetter));
             slot.CarryItem(letterCarrier);
             letterCarrier.GetCarried(slot);
         }
 
-        public void SetGoalGrid(int goalLength)
+        public void PrepareGridForGoalWord(int goalLength)
         {
-            gridC.InitializeGrid(goalLength);
+            goalGridHandler.InitializeGrid(goalLength);
         }
 
         public void EmptyASlot(Slot slot)
         {
             slot.EmptySlot();
-        }
-
-        public void ClearGoalGrid()
-        {
-            gridC.ClearGrid();
         }
     }

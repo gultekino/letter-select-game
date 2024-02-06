@@ -5,7 +5,6 @@ using UnityEngine;
 public class LetterManager : Singleton<LetterManager>
 {
     public event Action<LetterCarrier> OnLetterClicked;
-    public event Action<LetterCarrier> OnLetterSelected;
 
     [SerializeField] LetterCarrier letterCarrierPrefab;
     
@@ -14,14 +13,6 @@ public class LetterManager : Singleton<LetterManager>
         var letterCarrier = Instantiate(letterCarrierPrefab);
         letterCarrier.GetCarried(slot);
         return letterCarrier;
-    }
-    
-    public bool SpawnLetterCarriers(List<Slot> slots)
-    {
-        foreach (var slot in slots)
-            SpawnLetterCarrier(slot);
-        
-        return true;
     }
 
     public void LetterClicked(LetterCarrier letterCarrier)
@@ -34,16 +25,10 @@ public class LetterManager : Singleton<LetterManager>
         GridsManager.Instance.EmptyASlot(letterCarrier.CarryingSlot);
         letterCarrier.GetCarried(carryingSlot);
         carryingSlot.CarryItem(letterCarrier);
-        OnLetterSelected?.Invoke(letterCarrier);
     }
 
-    private void LetterNeededByGoal(LetterCarrier letterCarrier, int indexOfLetter)
+    public void MoveLettersToPos()
     {
         
-    }
-
-    public void LetterGetsCarried(Slot carryingSlot, LetterCarrier letterCarrier)
-    {
-        letterCarrier.GetCarried(carryingSlot);
     }
 }
