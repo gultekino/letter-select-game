@@ -426,26 +426,18 @@ PrefabInstance:
       propertyPath: slotsParent
       value: 
       objectReference: {fileID: 906669052}
-    - target: {fileID: 3227575588315680400, guid: c6ec754d02f0c48e39b693c252d40780, type: 3}
-      propertyPath: m_Name
-      value: GoalGridHandler
-      objectReference: {fileID: 0}
     - target: {fileID: 4109164070736646348, guid: c6ec754d02f0c48e39b693c252d40780, type: 3}
       propertyPath: m_Name
       value: Managers
       objectReference: {fileID: 0}
-    - target: {fileID: 4359781064903513306, guid: c6ec754d02f0c48e39b693c252d40780, type: 3}
-      propertyPath: slotsParent
-      value: 
-      objectReference: {fileID: 1732660452}
     - target: {fileID: 5320483691688461772, guid: c6ec754d02f0c48e39b693c252d40780, type: 3}
       propertyPath: slotsParent
       value: 
       objectReference: {fileID: 1732660452}
-    - target: {fileID: 6077540727306205023, guid: c6ec754d02f0c48e39b693c252d40780, type: 3}
-      propertyPath: currentGoal
-      value: TTLFTLLPF
-      objectReference: {fileID: 0}
+    - target: {fileID: 5609120421503449981, guid: c6ec754d02f0c48e39b693c252d40780, type: 3}
+      propertyPath: mainCamera
+      value: 
+      objectReference: {fileID: 519420031}
     - target: {fileID: 7202902277800980247, guid: c6ec754d02f0c48e39b693c252d40780, type: 3}
       propertyPath: slotsParent
       value: 

@@ -16,7 +16,7 @@
         {
             base.Awake();
             gridA = gridHandlers[0];
-            gridA.InitializeGrid();
+            gridA.InitializeGrid();;
             gridB = gridHandlers[1];
             gridB.InitializeGrid();
             gridA.FillGridWithLetterCarriers();

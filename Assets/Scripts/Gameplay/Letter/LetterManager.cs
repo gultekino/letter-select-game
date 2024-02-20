@@ -27,8 +27,9 @@ public class LetterManager : Singleton<LetterManager>
         carryingSlot.CarryItem(letterCarrier);
     }
 
-    public void MoveLettersToPos()
+    public void MoveLettersToTable(int activeGoalWordIndexOnLevel)
     {
-        
+        var positions = TableManager.Instance.GetGoalTableLoc(activeGoalWordIndexOnLevel);
+        //Empty the slots and move them to the table
     }
 }

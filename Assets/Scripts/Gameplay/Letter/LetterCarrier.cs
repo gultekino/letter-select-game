@@ -25,8 +25,8 @@ public class LetterCarrier : MonoBehaviour, ICarryable, ISelecable
         if (carryingSlot.SlotLocation == SlotLocation.GridA)
             Select();
     }
-    
-    public void Select()
+
+    private void Select()
     {
         LetterManager.Instance.LetterClicked(this);
     }

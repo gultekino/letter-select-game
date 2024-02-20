@@ -41,7 +41,7 @@ public class GoalManager : Singleton<GoalManager>
 
         if (activeGoal.lettersStatus.All(status => status == LetterStatus.Filled))
         {
-            LetterManager.Instance.MoveLettersToPos();
+            LetterManager.Instance.MoveLettersToTable(activeGoal.wordIndexOnLevel);
             OnGoalWordCompleted?.Invoke(activeGoal.wordIndexOnLevel);
             SetUpNextGoal();
         }
