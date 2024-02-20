@@ -12,6 +12,21 @@ public class GoalManager : Singleton<GoalManager>
         LevelManager.Instance.OnLevelStarted += OnLevelStarted;
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            ChangeGoal(activeGoal.wordIndexOnLevel);
+        }
+    }
+    private void ChangeGoal(int wordIndex)
+    {
+        var (goalWord, goalIndex) = LevelManager.Instance.GetNextGoalWord();
+        if (goalIndex == -1) return;
+        SetUpNextGoal(goalWord, goalIndex);
+    }
+
+
     private void OnLevelStarted()
     {
         var (goalWord, goalIndex) = LevelManager.Instance.GetNextGoalWord();
@@ -49,7 +64,7 @@ public class GoalManager : Singleton<GoalManager>
         return true;
     }
 
-    private void SetUpNextGoal()
+    public void SetUpNextGoal(string a="",int b=0)
     {
         var (nextGoalWord, nextGoalIndex) = LevelManager.Instance.GetNextGoalWord();
         if (nextGoalWord == null) return;

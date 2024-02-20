@@ -3,22 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class TablePiece
-{
-    public int wordIndex;
-    public int lineIndex;
-    public Vector2 startLocation;
-    public List<Slot> tableSlots;
-
-    public TablePiece(int wordIndex, int lineIndex, Vector2 startLocation, List<Slot> tableSlots)
-    {
-        this.wordIndex = wordIndex;
-        this.lineIndex = lineIndex;
-        this.startLocation = startLocation;
-        this.tableSlots = tableSlots;
-    }
-}
-
 public class TableManager : Singleton<TableManager>
 {
     [SerializeField] private GameObject tablePiecePrefab;
@@ -59,14 +43,8 @@ public class TableManager : Singleton<TableManager>
         }
     }
 
-    public Transform GetGoalTableLoc(int activeGoalWordIndexOnLevel)
-    {
-        return tableLocs[activeGoalWordIndexOnLevel];
-    }
-    
     public List<Slot> GetGoalTableSlots(int activeGoalWordIndexOnLevel)
     {
         return tablePieces[activeGoalWordIndexOnLevel].tableSlots;
-        //return tableLocs[activeGoalWordIndexOnLevel];
     }
 }

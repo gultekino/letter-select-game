@@ -11,7 +11,11 @@ class LevelProgress
         levelWordsStatus = new List<LevelWordStatus>(new LevelWordStatus[wordCount]);
     }
 
-    public int GetNonCompeteWordIndex() => levelWordsStatus.IndexOf(LevelWordStatus.WordNotCompleted);
+    public int GetNonCompeteWordIndex()
+    {
+     return levelWordsStatus.IndexOf(LevelWordStatus.WordNotCompleted);
+    } 
+        
     
     public void SetLevelWordStatus(int index, LevelWordStatus levelWordStatus)
     {

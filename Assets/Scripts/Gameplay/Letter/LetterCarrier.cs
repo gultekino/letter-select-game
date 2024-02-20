@@ -2,6 +2,7 @@ using System;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class LetterCarrier : MonoBehaviour, ICarryable, ISelecable
 {
@@ -15,12 +16,24 @@ public class LetterCarrier : MonoBehaviour, ICarryable, ISelecable
         get => carryingSlot;
         set => carryingSlot = value;
     }
-
+    
     public void OnMouseDown()
     {
         TrySelect();
     }
-    
+
+    private void Awake()
+    {
+        if (Random.value > 0.75f)
+        {
+            tmpText.SetText("A");
+        }
+        else
+        {
+            tmpText.SetText("L");
+        }
+    }
+
     public void TrySelect()
     {
         if (carryingSlot.SlotLocation == SlotLocation.GridA)

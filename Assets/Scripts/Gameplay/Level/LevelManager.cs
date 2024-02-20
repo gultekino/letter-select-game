@@ -11,6 +11,7 @@ public class LevelManager : Singleton<LevelManager>
     
     LevelProgress currentLevelProgress;
     public event Action OnLevelStarted;
+    private int currentWordIndex = 0;
     
     IEnumerator Start()
     {
@@ -19,7 +20,7 @@ public class LevelManager : Singleton<LevelManager>
         OnLevelStarted?.Invoke();
         GoalManager.Instance.OnGoalWordCompleted += WordCompleted;
     }
-
+    
     private void LetterSelected(LetterCarrier arg1) //Game end condition
     {
         if (GridsManager.Instance.GetGridBEmptySlotCount()==0)
@@ -28,6 +29,8 @@ public class LevelManager : Singleton<LevelManager>
 
     public (string,int) GetNextGoalWord()
     {
+        currentLevelProgress.SetLevelWordStatus(currentWordIndex,LevelWordStatus.WordNotCompleted);
+        
         var wordIndex = currentLevelProgress.GetNonCompeteWordIndex();
         if (wordIndex == -1)
         {
