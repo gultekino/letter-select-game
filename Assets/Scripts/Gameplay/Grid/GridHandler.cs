@@ -9,8 +9,8 @@ public class GridHandler : MonoBehaviour
     [SerializeField] Transform slotsParent;
     [SerializeField] private SlotLocation slotLocation;
 
-    private List<Slot> slots = new List<Slot>();
-    
+    public List<Slot> Slots { get; private set; } = new List<Slot>();
+
     public void InitializeGrid(int row = -1)
     {
         if (row!=-1){
@@ -18,13 +18,13 @@ public class GridHandler : MonoBehaviour
             slotsParent = new GameObject("CGridSlotHolder").transform;
         }
         GridSpawner spawner = new GridSpawner();
-        slots = spawner.SpawnGrid(gridConfiguration, slotPrefab ,slotsParent,slotLocation);
+        Slots = spawner.SpawnGrid(gridConfiguration, slotPrefab ,slotsParent,slotLocation);
     }
     
     public Slot GetSlot(Vector2 gridPosition)
     {
         int index = GetIndex(gridPosition);
-        return slots[index];
+        return Slots[index];
     }
 
     private int GetIndex(Vector2 gridPosition)
@@ -34,7 +34,7 @@ public class GridHandler : MonoBehaviour
 
     public void FillGridWithLetterCarriers()
     {
-        foreach (var slot in slots)
+        foreach (var slot in Slots)
         {
             var letterCarrier = LetterManager.Instance.SpawnLetterCarrier(slot);
             slot.CarryItem(letterCarrier);
@@ -43,7 +43,7 @@ public class GridHandler : MonoBehaviour
 
     public Slot GetEmptySlot()
     {
-        foreach (var slot in slots)
+        foreach (var slot in Slots)
         {
             if (!slot.IsOccupied)
                 return slot;
@@ -54,19 +54,6 @@ public class GridHandler : MonoBehaviour
     
     public int GetEmptySlotsCount()
     {
-        return slots.Count(slot => !slot.IsOccupied);
-    }
-
-    public void ClearGrid()
-    {
-    }
-
-    public void MoveLettersToPos()
-    {
-        slotsParent.transform.position = new Vector3(0, -20, 0);
-        foreach (var slot in slots)
-        {
-            slot.Carryable.GetCarried(slot);
-        }
+        return Slots.Count(slot => !slot.IsOccupied);
     }
 }

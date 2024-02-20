@@ -1,4 +1,5 @@
 using System;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 
@@ -35,7 +36,7 @@ public class LetterCarrier : MonoBehaviour, ICarryable, ISelecable
     {
         this.carryingSlot = carryingSlot;
         isGettingCarried = true;
-        transform.position = carryingSlot.WorldPosition;
+        transform.DOMove(carryingSlot.WorldPosition, 0.5f);
     }
 
     public bool IsGettingCarried()

@@ -15,7 +15,7 @@ public class TableManager : Singleton<TableManager>
     
     private void Start()
     {
-        InitializeTable();
+        //InitializeTable();
     }
 
     private void InitializeTable()
@@ -40,5 +40,10 @@ public class TableManager : Singleton<TableManager>
     public Transform GetGoalTableLoc(int activeGoalWordIndexOnLevel)
     {
         return tableLocs[activeGoalWordIndexOnLevel];
+    }
+
+    public Slot GetGoalSlot()
+    {
+        return new Slot(new Vector2(-20, -20), false, new Vector3(-20, -20), SlotLocation.Table);
     }
 }

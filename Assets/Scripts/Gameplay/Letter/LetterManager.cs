@@ -7,7 +7,7 @@ public class LetterManager : Singleton<LetterManager>
     public event Action<LetterCarrier> OnLetterClicked;
 
     [SerializeField] LetterCarrier letterCarrierPrefab;
-    
+    List<LetterCarrier> lettersInGoalGrid = new List<LetterCarrier>();
     public LetterCarrier SpawnLetterCarrier(Slot slot)
     {
         var letterCarrier = Instantiate(letterCarrierPrefab);
@@ -29,7 +29,18 @@ public class LetterManager : Singleton<LetterManager>
 
     public void MoveLettersToTable(int activeGoalWordIndexOnLevel)
     {
-        var positions = TableManager.Instance.GetGoalTableLoc(activeGoalWordIndexOnLevel);
-        //Empty the slots and move them to the table
+        var slot = TableManager.Instance.GetGoalSlot();//.GetGoalTableLoc(activeGoalWordIndexOnLevel);
+        foreach (var letter in lettersInGoalGrid)
+        {
+            GridsManager.Instance.EmptyASlot(letter.CarryingSlot);
+            letter.GetCarried(slot);
+            slot.CarryItem(letter);
+        }
+        lettersInGoalGrid.Clear();
+    }
+
+    public void LetterNeededByGoal(LetterCarrier letterCarrier)
+    {
+        lettersInGoalGrid.Add(letterCarrier);
     }
 }

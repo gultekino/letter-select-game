@@ -52,6 +52,7 @@
             var slot = goalGridHandler.GetSlot(new Vector2(0, indexOfLetter));
             slot.CarryItem(letterCarrier);
             letterCarrier.GetCarried(slot);
+            LetterManager.Instance.LetterNeededByGoal(letterCarrier);
         }
 
         public void PrepareGridForGoalWord(int goalLength)
@@ -62,5 +63,10 @@
         public void EmptyASlot(Slot slot)
         {
             slot.EmptySlot();
+        }
+
+        public List<Slot> GetGoalGridSlots()
+        {
+            return goalGridHandler.Slots;
         }
     }
