@@ -178,8 +178,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2faab76686964b7a9f06128cdb9918f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tablePiecePrefab: {fileID: 0}
-  levelDataSO: {fileID: 0}
+  tablePiecePrefab: {fileID: 3248575299048764812, guid: 363b8fd1485eb4764b66beb57b0e52cb, type: 3}
+  levelDataSO: {fileID: 11400000, guid: b9f051376039c428c9e977e4a1ff7090, type: 2}
   tableParent: {fileID: 0}
 --- !u!1 &4109164070736646348
 GameObject:

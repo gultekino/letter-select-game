@@ -29,13 +29,15 @@ public class LetterManager : Singleton<LetterManager>
 
     public void MoveLettersToTable(int activeGoalWordIndexOnLevel)
     {
-        var slot = TableManager.Instance.GetGoalSlot();//.GetGoalTableLoc(activeGoalWordIndexOnLevel);
-        foreach (var letter in lettersInGoalGrid)
+        var slot = TableManager.Instance.GetGoalTableSlots(activeGoalWordIndexOnLevel);
+        for (var index = 0; index < lettersInGoalGrid.Count; index++)
         {
+            var letter = lettersInGoalGrid[index];
             GridsManager.Instance.EmptyASlot(letter.CarryingSlot);
-            letter.GetCarried(slot);
-            slot.CarryItem(letter);
+            lettersInGoalGrid[index].GetCarried(slot[index]);
+            slot[index].CarryItem(lettersInGoalGrid[index]);
         }
+
         lettersInGoalGrid.Clear();
     }
 

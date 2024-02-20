@@ -8,13 +8,13 @@ public class LetterCarrier : MonoBehaviour, ICarryable, ISelecable
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private TMP_Text tmpText;
     Slot carryingSlot;
+    bool isGettingCarried = false;
+    
     public Slot CarryingSlot
     {
         get => carryingSlot;
         set => carryingSlot = value;
     }
-    
-    bool isGettingCarried = false;
 
     public void OnMouseDown()
     {

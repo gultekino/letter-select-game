@@ -341,7 +341,39 @@ Transform:
   - {fileID: 845517394}
   - {fileID: 906669052}
   - {fileID: 1732660452}
+  - {fileID: 1507281908}
   m_Father: {fileID: 1354149803}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1507281907
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1507281908}
+  m_Layer: 0
+  m_Name: Table
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1507281908
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1507281907}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1479473614}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1732660451
 GameObject:
@@ -426,6 +458,10 @@ PrefabInstance:
       propertyPath: slotsParent
       value: 
       objectReference: {fileID: 906669052}
+    - target: {fileID: 3842517430471764259, guid: c6ec754d02f0c48e39b693c252d40780, type: 3}
+      propertyPath: tableParent
+      value: 
+      objectReference: {fileID: 1507281908}
     - target: {fileID: 4109164070736646348, guid: c6ec754d02f0c48e39b693c252d40780, type: 3}
       propertyPath: m_Name
       value: Managers
