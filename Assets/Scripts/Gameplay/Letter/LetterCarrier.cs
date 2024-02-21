@@ -1,32 +1,55 @@
 using System;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class LetterCarrier : MonoBehaviour, ICarryable, ISelecable
 {
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private TMP_Text tmpText;
+    Slot carryingSlot;
     bool isGettingCarried = false;
-
+    
+    public Slot CarryingSlot
+    {
+        get => carryingSlot;
+        set => carryingSlot = value;
+    }
+    
     public void OnMouseDown()
     {
         TrySelect();
     }
-    
+
+    private void Awake()
+    {
+        if (Random.value > 0.75f)
+        {
+            tmpText.SetText("A");
+        }
+        else
+        {
+            tmpText.SetText("L");
+        }
+    }
+
     public void TrySelect()
     {
-        if (!isGettingCarried)
+        if (carryingSlot.SlotLocation == SlotLocation.GridA)
             Select();
     }
-    
-    public void Select()
+
+    private void Select()
     {
         LetterManager.Instance.LetterClicked(this);
     }
     
-    public void GetCarried(Vector2 carryingPos)
+    public void GetCarried(Slot carryingSlot)
     {
-        transform.position = carryingPos;
+        this.carryingSlot = carryingSlot;
+        isGettingCarried = true;
+        transform.DOMove(carryingSlot.WorldPosition, 0.5f);
     }
 
     public bool IsGettingCarried()
@@ -41,10 +64,9 @@ public class LetterCarrier : MonoBehaviour, ICarryable, ISelecable
     
     public void UpdateVisuals()
     {
-        throw new NotImplementedException();
     }
     
-    public char GetLetterCarrying()
+    public char GetLetter()
     {
         return tmpText.text[0];
     }

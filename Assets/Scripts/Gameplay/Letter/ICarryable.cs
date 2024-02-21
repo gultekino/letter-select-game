@@ -2,6 +2,6 @@
 
     public interface ICarryable
     {
-        void GetCarried(Vector2 carryingPos);
+        void GetCarried(Slot carryingSlot);
         bool IsGettingCarried();
     }

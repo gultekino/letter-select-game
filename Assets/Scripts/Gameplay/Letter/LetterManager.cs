@@ -4,44 +4,45 @@ using UnityEngine;
 
 public class LetterManager : Singleton<LetterManager>
 {
-    public event Action<LetterCarrier,Action<LetterCarrier,Slot>> OnLetterClicked;
-    public event Action<LetterCarrier,Action<LetterCarrier,int>> OnLetterSelected;
+    public event Action<LetterCarrier> OnLetterClicked;
 
     [SerializeField] LetterCarrier letterCarrierPrefab;
-    
+    List<LetterCarrier> lettersInGoalGrid = new List<LetterCarrier>();
     public LetterCarrier SpawnLetterCarrier(Slot slot)
     {
         var letterCarrier = Instantiate(letterCarrierPrefab);
-        letterCarrier.GetCarried(slot.WorldPosition);
+        letterCarrier.GetCarried(slot);
         return letterCarrier;
-    }
-    
-    public bool SpawnLetterCarriers(List<Slot> slots)
-    {
-        foreach (var slot in slots)
-            SpawnLetterCarrier(slot);
-        
-        return true;
     }
 
     public void LetterClicked(LetterCarrier letterCarrier)
     {
-        OnLetterClicked?.Invoke(letterCarrier,LetterSelected);
+        OnLetterClicked?.Invoke(letterCarrier);
     }
 
-    private void LetterSelected(LetterCarrier letterCarrier,Slot carryingSlot)
+    public void MoveLetterGridB(LetterCarrier letterCarrier,Slot carryingSlot)
     {
-        letterCarrier.GetCarried(carryingSlot.WorldPosition);
-        OnLetterSelected?.Invoke(letterCarrier,LetterNeededByGoal);
+        GridsManager.Instance.EmptyASlot(letterCarrier.CarryingSlot);
+        letterCarrier.GetCarried(carryingSlot);
+        carryingSlot.CarryItem(letterCarrier);
     }
 
-    private void LetterNeededByGoal(LetterCarrier letterCarrier, int indexOfLetter)
+    public void MoveLettersToTable(int activeGoalWordIndexOnLevel)
     {
-        
+        var slot = TableManager.Instance.GetTableSlotsForGoal(activeGoalWordIndexOnLevel);
+        for (var index = 0; index < lettersInGoalGrid.Count; index++)
+        {
+            var letter = lettersInGoalGrid[index];
+            GridsManager.Instance.EmptyASlot(letter.CarryingSlot);
+            lettersInGoalGrid[index].GetCarried(slot[index]);
+            slot[index].CarryItem(lettersInGoalGrid[index]);
+        }
+
+        lettersInGoalGrid.Clear();
     }
 
-    public void LetterGetsCarried(Slot carryingSlot, LetterCarrier letterCarrier)
+    public void LetterNeededByGoal(LetterCarrier letterCarrier)
     {
-        letterCarrier.GetCarried(carryingSlot.WorldPosition);
+        lettersInGoalGrid.Add(letterCarrier);
     }
 }

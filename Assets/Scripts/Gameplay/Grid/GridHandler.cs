@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class GridHandler : MonoBehaviour
@@ -6,25 +7,24 @@ public class GridHandler : MonoBehaviour
     [SerializeField] GridConfiguration gridConfiguration;
     [SerializeField] GameObject slotPrefab;
     [SerializeField] Transform slotsParent;
+    [SerializeField] private SlotLocation slotLocation;
 
-    private List<Slot> slots = new List<Slot>();
-    
-    public void InitializeGrid()
+    public List<Slot> Slots { get; private set; } = new List<Slot>();
+
+    public void InitializeGrid(int row = -1)
     {
+        if (row!=-1){
+            gridConfiguration.Row = row;
+            slotsParent = new GameObject("CGridSlotHolder").transform;
+        }
         GridSpawner spawner = new GridSpawner();
-        slots = spawner.SpawnGrid(gridConfiguration, slotPrefab ,slotsParent);
+        Slots = spawner.SpawnGrid(gridConfiguration, slotPrefab ,slotsParent,slotLocation);
     }
     
     public Slot GetSlot(Vector2 gridPosition)
     {
         int index = GetIndex(gridPosition);
-        return slots[index];
-    }
-    
-    public void SetOccupation(Vector2 gridPosition, bool isOccupied)
-    {
-        int index = GetIndex(gridPosition);
-        slots[index].IsOccupied = isOccupied;
+        return Slots[index];
     }
 
     private int GetIndex(Vector2 gridPosition)
@@ -34,21 +34,26 @@ public class GridHandler : MonoBehaviour
 
     public void FillGridWithLetterCarriers()
     {
-        foreach (var slot in slots)
+        foreach (var slot in Slots)
         {
-            slot.IsOccupied = true;
             var letterCarrier = LetterManager.Instance.SpawnLetterCarrier(slot);
+            slot.CarryItem(letterCarrier);
         }
     }
 
     public Slot GetEmptySlot()
     {
-        foreach (var slot in slots)
+        foreach (var slot in Slots)
         {
             if (!slot.IsOccupied)
                 return slot;
         }
 
         return null;
+    }
+    
+    public int GetEmptySlotsCount()
+    {
+        return Slots.Count(slot => !slot.IsOccupied);
     }
 }
