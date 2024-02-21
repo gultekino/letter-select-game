@@ -29,7 +29,7 @@ public class LetterManager : Singleton<LetterManager>
 
     public void MoveLettersToTable(int activeGoalWordIndexOnLevel)
     {
-        var slot = TableManager.Instance.GetGoalTableSlots(activeGoalWordIndexOnLevel);
+        var slot = TableManager.Instance.GetTableSlotsForGoal(activeGoalWordIndexOnLevel);
         for (var index = 0; index < lettersInGoalGrid.Count; index++)
         {
             var letter = lettersInGoalGrid[index];

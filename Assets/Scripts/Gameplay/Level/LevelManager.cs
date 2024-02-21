@@ -9,41 +9,66 @@ public class LevelManager : Singleton<LevelManager>
     [SerializeField] LevelDataSO levelDataSO;
     private LevelData levelData => levelDataSO.levelData;
     
-    LevelProgress currentLevelProgress;
-    public event Action OnLevelStarted;
-    private int currentWordIndex = 0;
+    LevelProgress levelProgress;
+    public event Action LevelStarted;
     
-    IEnumerator Start()
+    private void Awake()
     {
-        currentLevelProgress = new LevelProgress(levelData.GoalWords.Count);
-        yield return null; // wait for other managers to subscribe to the event
-        OnLevelStarted?.Invoke();
-        GoalManager.Instance.OnGoalWordCompleted += WordCompleted;
-    }
-    
-    private void LetterSelected(LetterCarrier arg1) //Game end condition
-    {
-        if (GridsManager.Instance.GetGridBEmptySlotCount()==0)
-            Debug.Log("No empty slots in grid B");
+        base.Awake();
+        StartCoroutine(InitializeLevel());
     }
 
-    public (string,int) GetNextGoalWord()
+    private IEnumerator InitializeLevel()
     {
-        currentLevelProgress.SetLevelWordStatus(currentWordIndex,LevelWordStatus.WordNotCompleted);
-        
-        var wordIndex = currentLevelProgress.GetNonCompeteWordIndex();
+        levelProgress = new LevelProgress(levelData.GoalWords.Count);
+        yield return null; // Ensures other managers are ready and subscribed
+        LevelStarted?.Invoke();
+        GoalManager.Instance.GoalWordCompleted += HandleWordCompletion;
+        GoalManager.Instance.GoalWordChanged += HandleGoalWordChanged;
+    }
+
+    private void HandleGoalWordChanged(string goalWord, int goalWordIndex)
+    {
+        levelProgress.SetLevelWordStatus(goalWordIndex,LevelWordStatus.WordNotCompleted);
+        levelProgress.CurrentWordIndex = goalWordIndex;
+    }
+
+    private void HandleWordCompletion(int wordIndexOnLevel)
+    {
+        UpdateWordCompletionStatus(wordIndexOnLevel,LevelWordStatus.WordCompleted);
+        CheckForLevelCompletion();
+    }
+    
+    private void UpdateWordCompletionStatus(int wordIndexOnLevel, LevelWordStatus levelWordStatus)
+    {
+        levelProgress.SetLevelWordStatus(wordIndexOnLevel, levelWordStatus);
+    }
+    
+    private void CheckForLevelCompletion()
+    {
+        if (levelProgress.AllWordsCompleted())
+        {
+            Debug.Log("Level completed!");
+        }
+    }
+
+    public (string, int) TryGetNextGoalWord()
+    {
+        int wordIndex = levelProgress.GetNextIncompleteWordIndex();
+        Debug.Log("Next word index: " + wordIndex);
         if (wordIndex == -1)
         {
-            Debug.Log("No more words to compete. Game end.");
-            return (null,-1);
+            Debug.Log("All words completed. Level ends.");
+            return (null, -1);
         }
-        
-        currentLevelProgress.SetLevelWordStatus(wordIndex, LevelWordStatus.WordIsGoal);
-        return (levelData.GoalWords[wordIndex],wordIndex);
+        return (levelData.GoalWords[wordIndex], wordIndex);
     }
-
-    public void WordCompleted(int wordIndexOnLevel)
+    
+    public (string,int) TryGetFirstGoalWord()
     {
-        currentLevelProgress.SetLevelWordStatus(wordIndexOnLevel, LevelWordStatus.WordCompleted);
+        int wordIndex = levelProgress.GetFirstIncompleteWordIndex();
+        if (wordIndex == -1)
+            return (null, -1);
+        return (levelData.GoalWords[wordIndex], wordIndex);
     }
 }

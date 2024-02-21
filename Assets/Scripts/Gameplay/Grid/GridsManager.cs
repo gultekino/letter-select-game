@@ -46,7 +46,7 @@
             LetterManager.Instance.OnLetterClicked -= LetterClicked;
         }
 
-        public void LetterNeededByGoal(LetterCarrier letterCarrier, int indexOfLetter)
+        public void PlaceLetterInGoal(LetterCarrier letterCarrier, int indexOfLetter)
         {
             letterCarrier.CarryingSlot.EmptySlot();
             var slot = goalGridHandler.GetSlot(new Vector2(0, indexOfLetter));

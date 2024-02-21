@@ -3,16 +3,14 @@ using UnityEngine;
 
 public class TablePiece
 {
-    public int wordIndex;
-    public int lineIndex;
-    public Vector2 startLocation;
-    public List<Slot> tableSlots;
+    public List<Slot> Slots { get; }
+    public int LineNumber { get; }
+    public Vector2 StartPosition { get; }
 
-    public TablePiece(int wordIndex, int lineIndex, Vector2 startLocation, List<Slot> tableSlots)
+    public TablePiece(List<Slot> slots, int lineNumber, Vector2 startPosition)
     {
-        this.wordIndex = wordIndex;
-        this.lineIndex = lineIndex;
-        this.startLocation = startLocation;
-        this.tableSlots = tableSlots;
+        Slots = slots;
+        LineNumber = lineNumber;
+        StartPosition = startPosition;
     }
 }

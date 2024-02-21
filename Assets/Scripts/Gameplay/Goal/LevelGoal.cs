@@ -1,12 +1,29 @@
+using System.Linq;
+
 public class LevelGoal
 {
-    public LetterStatus[] lettersStatus;
-    public  string goalWord;
-    public int wordIndexOnLevel;
-    public LevelGoal(string GoalWord,int wordIndexOnLevel)
+    public LetterStatus[] LettersStatus;
+    public  string GoalWord;
+    public int WordIndex;
+    public LevelGoal(string goalWord,int wordIndex)
     {
-        goalWord = GoalWord;
-        lettersStatus = new LetterStatus[GoalWord.Length];
-        this.wordIndexOnLevel = wordIndexOnLevel;
+        this.GoalWord = goalWord;
+        LettersStatus = new LetterStatus[goalWord.Length];
+        this.WordIndex = wordIndex;
+    }
+    
+    public bool IsPositionEmpty(int position)
+    {
+        return LettersStatus[position] == LetterStatus.Empty;
+    }
+
+    public void MarkLetterAsFilled(int positionToFill)
+    {
+        LettersStatus[positionToFill] = LetterStatus.Filled;
+    }
+
+    public bool IsGoalCompleted()
+    {
+        return LettersStatus.All(status => status == LetterStatus.Filled);
     }
 }

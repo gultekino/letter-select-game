@@ -1,24 +1,41 @@
 using System.Collections.Generic;
+using System.Linq;
 
 class LevelProgress
 {
     private int wordCount;
     private List<LevelWordStatus> levelWordsStatus;
-    
+    public int CurrentWordIndex { get; set; }
+
     public LevelProgress(int wordCount)
     {
         this.wordCount = wordCount;
-        levelWordsStatus = new List<LevelWordStatus>(new LevelWordStatus[wordCount]);
+        levelWordsStatus = Enumerable.Repeat(LevelWordStatus.WordNotCompleted, wordCount).ToList();
     }
 
-    public int GetNonCompeteWordIndex()
+    public int GetNextIncompleteWordIndex()
     {
-     return levelWordsStatus.IndexOf(LevelWordStatus.WordNotCompleted);
-    } 
-        
+        int nextWordIndex = levelWordsStatus.IndexOf(LevelWordStatus.WordNotCompleted, CurrentWordIndex + 1);
+        if (nextWordIndex == -1)
+        {
+            nextWordIndex = GetFirstIncompleteWordIndex();
+        }
+
+        return nextWordIndex;
+    }
     
-    public void SetLevelWordStatus(int index, LevelWordStatus levelWordStatus)
+    public int GetFirstIncompleteWordIndex()
     {
-        levelWordsStatus[index] = levelWordStatus;
+        return levelWordsStatus.IndexOf(LevelWordStatus.WordNotCompleted);
+    }
+    
+    public bool AllWordsCompleted()
+    {
+        return levelWordsStatus.All(status => status == LevelWordStatus.WordCompleted);
+    }
+    
+    public void SetLevelWordStatus(int index, LevelWordStatus status)
+    {
+        levelWordsStatus[index] = status;
     }
 }

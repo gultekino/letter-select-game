@@ -66,7 +66,7 @@ public class LetterCarrier : MonoBehaviour, ICarryable, ISelecable
     {
     }
     
-    public char GetLetterCarrying()
+    public char GetLetter()
     {
         return tmpText.text[0];
     }
