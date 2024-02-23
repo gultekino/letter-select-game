@@ -1,12 +1,14 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 public class GoalManager : Singleton<GoalManager>
 {
+    private List<LevelGoal> levelGoals = new List<LevelGoal>();
     private LevelGoal activeGoal;
     public event Action<int> GoalWordCompleted;
-    public event Action<string, int> GoalWordChanged;
+    public event Action<int,int,int> GoalWordChanged; //int goalWordIndex, int previousGoalWordIndex, int goalWordLength
 
     private void Update()
     {
@@ -15,48 +17,41 @@ public class GoalManager : Singleton<GoalManager>
             ChangeGoalToNext();
         }
     }
+    
 
     private void ChangeGoalToNext()
     {
         var (nextWord, nextIndex) = LevelManager.Instance.TryGetNextGoalWord();
         if (nextIndex == -1) return;
         
-        SetupGoal(nextWord, nextIndex);
-        GoalWordChanged?.Invoke(nextWord, nextIndex);
-    }
-
-    private void SetupGoal(string goalWord, int goalIndex)
-    {
-        activeGoal = new LevelGoal(goalWord, goalIndex);
-        GridsManager.Instance.PrepareGridForGoalWord(activeGoal.GoalWord.Length);
+        GoalWordChanged?.Invoke(nextIndex, activeGoal.WordIndex, activeGoal.GoalWord.Length);
     }
 
     private void HandleLevelStarted()
     {
-        SetupFirstGoal();
-    }
-
-    private void SetupFirstGoal()
-    {
-        var (goalWord, goalIndex) = LevelManager.Instance.TryGetFirstGoalWord();
-        SetupGoal(goalWord,goalIndex);
+        SetupNextGoal();
     }
 
     private void SetupNextGoal()
     {
         var (goalWord, goalIndex) = LevelManager.Instance.TryGetNextGoalWord();
-        SetupGoal(goalWord,goalIndex);
+        activeGoal = levelGoals[goalIndex];
+        GoalWordChanged?.Invoke(goalIndex, activeGoal.WordIndex, activeGoal.GoalWord.Length);
     }
     
     private void CompleteGoal()
     {
-        LetterManager.Instance.MoveLettersToTable(activeGoal.WordIndex);
         GoalWordCompleted?.Invoke(activeGoal.WordIndex);
         SetupNextGoal();
     }
     
     private void Start()
     {
+        var goalWords = LevelManager.Instance.GetGoalWords();
+        for (int i = 0; i < goalWords.Count; i++)
+        {
+            levelGoals.Add(new LevelGoal(goalWords[i], i));
+        }
         LevelManager.Instance.LevelStarted += HandleLevelStarted;
     }
     private void OnDisable()
@@ -88,13 +83,13 @@ public class GoalManager : Singleton<GoalManager>
             return -1;
         }
 
-        var positionToFill = targetPositions.FirstOrDefault(pos => activeGoal.IsPositionEmpty(pos));
-        if (positionToFill == -1)
+        var positionToFill = targetPositions.Where(pos => activeGoal.IsPositionEmpty(pos));
+        if (!positionToFill.Any())
         {
             return -1;
         }
 
-        return positionToFill;
+        return positionToFill.First();
     }
     public bool PartOfTheGoal(LetterCarrier letterCarrier)
     {

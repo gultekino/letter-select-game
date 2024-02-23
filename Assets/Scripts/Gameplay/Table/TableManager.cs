@@ -65,4 +65,23 @@ public class TableManager : Singleton<TableManager>
         }
         return new List<Slot>();
     }
+
+    public void FillWordInTable(List<Slot> gridBSlots, int wordIndex)
+    {
+        var tableSlots = GetTableSlotsForGoal(wordIndex);
+        for (var i = 0; i < gridBSlots.Count; i++)
+        {
+            var letterCarrier = gridBSlots[i].GetCarriedItem();
+            if (letterCarrier)
+            {
+                tableSlots[i].CarryItem(letterCarrier);
+                letterCarrier.GetCarried(tableSlots[i]);
+            }
+        }
+    }
+
+    public List<Slot> GetWordSlotsInTable(int goalWordIndex)
+    {
+        return tablePieces[goalWordIndex].Slots;
+    }
 }
