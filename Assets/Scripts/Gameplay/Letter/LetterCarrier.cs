@@ -24,7 +24,7 @@ public class LetterCarrier : MonoBehaviour, ICarryable, ISelecable
 
     private void Awake()
     {
-        if (Random.value > 0.75f)
+        if (Random.value > 0.66f)
         {
             tmpText.SetText("A");
         }

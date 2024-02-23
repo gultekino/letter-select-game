@@ -25,34 +25,21 @@
         private void OnEnable()
         {
             LetterManager.Instance.OnLetterClicked += LetterClicked;
-            GoalManager.Instance.GoalWordCompleted += HandleGoalWordCompleted;
             GoalManager.Instance.GoalWordChanged += HandleGoalWordChanged;
         }
 
         private void HandleGoalWordChanged(int goalWordIndex, int previousGoalWordIndex, int goalWordLength)
         {
-            PrepareGridForGoalWord(goalWordLength, goalWordIndex);
-            TableManager.Instance.FillWordInTable(goalGridHandler.Slots, previousGoalWordIndex);
-            var tableSlots = TableManager.Instance.GetWordSlotsInTable(goalWordIndex);
-            FillGoalGridWithTableSlots(tableSlots);
-        }
-        
-        private void FillGoalGridWithTableSlots(List<Slot> tableSlots)
-        {
-            for (var index = 0; index < tableSlots.Count; index++)
-            {
-                var slot = tableSlots[index];
-                var letterCarrier = slot.GetCarriedItem();
-                if (letterCarrier)
-                {
-                    PlaceLetterInGoal(letterCarrier, index);
-                }
-            }
+            MoveGoalToTable(previousGoalWordIndex);
+            goalGridHandler.InitializeGrid(goalWordLength);
+            MoveTableToGoalGrid(goalWordIndex);
+            MoveGridBToGoalGrid();
         }
 
-        private void HandleGoalWordCompleted(int wordIndex)
+        private void MoveGoalToTable(int goalWordIndex)
         {
-            TableManager.Instance.FillWordInTable(goalGridHandler.Slots, wordIndex);
+            var goalSlots = goalGridHandler.Slots;
+            TableManager.Instance.FillWordInTable(goalSlots, goalWordIndex);
         }
 
         private void LetterClicked(LetterCarrier letterCarrier)
@@ -84,9 +71,7 @@
 
         private void PrepareGridForGoalWord(int goalLength,int goalIndex)
         {
-            goalGridHandler.InitializeGrid(goalLength);
-            MoveTableToGoalGrid(goalIndex);
-            MoveGridBToGoalGrid();
+            
         }
 
         private void MoveTableToGoalGrid(int wordIndex)

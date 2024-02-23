@@ -52,11 +52,16 @@ public class LevelManager : Singleton<LevelManager>
         }
     }
 
-    public (string, int) TryGetNextGoalWord()
+    public (string, int) TryGetNextGoalIndex()
     {
         int wordIndex = levelProgress.GetNextIncompleteWordIndex();
         Debug.Log("Next word index: " + wordIndex);
-        if (wordIndex == -1)
+        if (wordIndex == levelProgress.CurrentWordIndex)
+        {
+            Debug.Log("NO OTHER WORD LEFT");
+            return (null, -1);
+        }
+        if (wordIndex == -1) 
         {
             Debug.Log("All words completed. Level ends.");
             return (null, -1);
@@ -75,5 +80,10 @@ public class LevelManager : Singleton<LevelManager>
     public List<string> GetGoalWords()
     {
         return levelData.GoalWords;
+    }
+
+    public void SetGoalWordIndex(int goalIndex)
+    {
+        levelProgress.CurrentWordIndex = goalIndex;
     }
 }

@@ -21,22 +21,31 @@ public class GoalManager : Singleton<GoalManager>
 
     private void ChangeGoalToNext()
     {
-        var (nextWord, nextIndex) = LevelManager.Instance.TryGetNextGoalWord();
-        if (nextIndex == -1) return;
-        
-        GoalWordChanged?.Invoke(nextIndex, activeGoal.WordIndex, activeGoal.GoalWord.Length);
+        SetupNextGoal();
     }
 
     private void HandleLevelStarted()
     {
-        SetupNextGoal();
+        SetupFirstGoal();
     }
 
     private void SetupNextGoal()
     {
-        var (goalWord, goalIndex) = LevelManager.Instance.TryGetNextGoalWord();
+        var (goalWord, goalIndex) = LevelManager.Instance.TryGetNextGoalIndex();
+        if (goalIndex == -1)
+            return;
+
+        LevelManager.Instance.SetGoalWordIndex(goalIndex);
+        int previousGoalWordIndex = activeGoal.WordIndex;
         activeGoal = levelGoals[goalIndex];
-        GoalWordChanged?.Invoke(goalIndex, activeGoal.WordIndex, activeGoal.GoalWord.Length);
+        GoalWordChanged?.Invoke(goalIndex, previousGoalWordIndex, levelGoals[goalIndex].GoalWord.Length);
+    }
+    
+    private void SetupFirstGoal()
+    {
+        LevelManager.Instance.SetGoalWordIndex(0);
+        activeGoal = levelGoals[0];
+        GoalWordChanged?.Invoke(0, activeGoal.WordIndex, activeGoal.GoalWord.Length);
     }
     
     private void CompleteGoal()
