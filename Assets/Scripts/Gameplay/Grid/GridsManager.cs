@@ -1,4 +1,5 @@
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
     using DG.Tweening;
@@ -30,16 +31,26 @@
 
         private void HandleGoalWordChanged(int goalWordIndex, int previousGoalWordIndex, int goalWordLength)
         {
+            //StartCoroutine(GoalWordChanged(goalWordIndex, previousGoalWordIndex, goalWordLength));
+            
+            
             MoveGoalToTable(previousGoalWordIndex);
             goalGridHandler.InitializeGrid(goalWordLength);
             MoveTableToGoalGrid(goalWordIndex);
             MoveGridBToGoalGrid();
         }
 
-        private void MoveGoalToTable(int goalWordIndex)
+        private IEnumerator GoalWordChanged(int goalWordIndex, int previousGoalWordIndex, int goalWordLength)
+        {
+            MoveGoalToTable(goalWordIndex);
+            yield break;
+        }
+
+        private IEnumerator MoveGoalToTable(int goalWordIndex)
         {
             var goalSlots = goalGridHandler.Slots;
             TableManager.Instance.FillWordInTable(goalSlots, goalWordIndex);
+            yield break;
         }
 
         private void LetterClicked(LetterCarrier letterCarrier)
@@ -47,11 +58,18 @@
             var emptySlot = gridB.GetEmptySlot();
             
             if (emptySlot == null)
-                return;
-            if (GoalManager.Instance.PartOfTheGoal(letterCarrier))
-                return;
+                return; 
             
-            LetterManager.Instance.MoveLetterGridB(letterCarrier, emptySlot);
+            var letterIndexInTheGoal = GoalManager.Instance.TryGetIndexOfLetterInTheGoal(letterCarrier);
+            if (letterIndexInTheGoal != -1)//If the letter is in the goal grid
+            {
+                PlaceLetterInGoal(letterCarrier,letterIndexInTheGoal);
+                GoalManager.Instance.LetterInGoalSelected(letterIndexInTheGoal);
+            }
+            else
+            {
+                LetterManager.Instance.MoveLetterGridB(letterCarrier, emptySlot);
+            }
         }
         
         public void PlaceLetterInGoal(LetterCarrier letterCarrier, int indexOfLetter)
@@ -67,11 +85,6 @@
         private void OnDisable()
         {
             LetterManager.Instance.OnLetterClicked -= LetterClicked;
-        }
-
-        private void PrepareGridForGoalWord(int goalLength,int goalIndex)
-        {
-            
         }
 
         private void MoveTableToGoalGrid(int wordIndex)
@@ -94,7 +107,7 @@
             {
                 var letterCarrier = slot.GetCarriedItem();
                 if (letterCarrier)
-                    GoalManager.Instance.PartOfTheGoal(letterCarrier);
+                    GoalManager.Instance.TryGetIndexOfLetterInTheGoal(letterCarrier);
             }
         }
 

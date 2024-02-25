@@ -67,41 +67,31 @@ public class GoalManager : Singleton<GoalManager>
     {
         LevelManager.Instance.LevelStarted -= HandleLevelStarted;
     }
-
-    private bool TrySelectLetter(LetterCarrier letterCarrier)
+    
+    public int TryGetIndexOfLetterInTheGoal(LetterCarrier letterCarrier)
     {
         var letter = letterCarrier.GetLetter();
         var positionToFill = TryGetPositionToFill(letter);
         if (positionToFill == -1)
-            return false;
-
-        activeGoal.MarkLetterAsFilled(positionToFill);
-        GridsManager.Instance.PlaceLetterInGoal(letterCarrier, positionToFill);
-
-        if (activeGoal.IsGoalCompleted())
-            CompleteGoal();
-
-        return true;
+            return -1;
+        
+        return positionToFill;
     }
     
     private int TryGetPositionToFill(char letter)
     {
-        var targetPositions = activeGoal.GoalWord.AllIndexesOf(letter);
+        var targetPositions = activeGoal.GoalWord.AllIndexesOf(letter).Where(pos=>activeGoal.IsPositionEmpty(pos));
         if (!targetPositions.Any())
         {
             return -1;
         }
-
-        var positionToFill = targetPositions.Where(pos => activeGoal.IsPositionEmpty(pos));
-        if (!positionToFill.Any())
-        {
-            return -1;
-        }
-
-        return positionToFill.First();
+        return targetPositions.First();
     }
-    public bool PartOfTheGoal(LetterCarrier letterCarrier)
+
+    public void LetterInGoalSelected(int letterIndexInTheGoal)
     {
-        return TrySelectLetter(letterCarrier);
+        activeGoal.MarkLetterAsFilled(letterIndexInTheGoal);
+        if (activeGoal.IsGoalCompleted())
+            CompleteGoal();
     }
 }
