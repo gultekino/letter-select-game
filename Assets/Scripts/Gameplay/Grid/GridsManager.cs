@@ -31,26 +31,22 @@
 
         private void HandleGoalWordChanged(int goalWordIndex, int previousGoalWordIndex, int goalWordLength)
         {
-            //StartCoroutine(GoalWordChanged(goalWordIndex, previousGoalWordIndex, goalWordLength));
-            
-            
-            MoveGoalToTable(previousGoalWordIndex);
-            goalGridHandler.InitializeGrid(goalWordLength);
-            MoveTableToGoalGrid(goalWordIndex);
-            MoveGridBToGoalGrid();
+            StartCoroutine(GoalWordChanged(goalWordIndex, previousGoalWordIndex, goalWordLength));
         }
 
         private IEnumerator GoalWordChanged(int goalWordIndex, int previousGoalWordIndex, int goalWordLength)
         {
-            MoveGoalToTable(goalWordIndex);
-            yield break;
+            MoveGoalToTable(previousGoalWordIndex);
+            goalGridHandler.InitializeGrid(goalWordLength);
+            yield return new WaitForSeconds(0.6f);
+            yield return MoveTableToGoalGrid(goalWordIndex);
+            yield return MoveGridBToGoalGrid();
         }
 
-        private IEnumerator MoveGoalToTable(int goalWordIndex)
+        private void MoveGoalToTable(int goalWordIndex)
         {
             var goalSlots = goalGridHandler.Slots;
             TableManager.Instance.FillWordInTable(goalSlots, goalWordIndex);
-            yield break;
         }
 
         private void LetterClicked(LetterCarrier letterCarrier)
@@ -63,7 +59,7 @@
             var letterIndexInTheGoal = GoalManager.Instance.TryGetIndexOfLetterInTheGoal(letterCarrier);
             if (letterIndexInTheGoal != -1)//If the letter is in the goal grid
             {
-                PlaceLetterInGoal(letterCarrier,letterIndexInTheGoal);
+                PlaceLetterInGoalGrid(letterCarrier,letterIndexInTheGoal);
                 GoalManager.Instance.LetterInGoalSelected(letterIndexInTheGoal);
             }
             else
@@ -72,7 +68,7 @@
             }
         }
         
-        public void PlaceLetterInGoal(LetterCarrier letterCarrier, int indexOfLetter)
+        private void PlaceLetterInGoalGrid(LetterCarrier letterCarrier, int indexOfLetter)
         {
             letterCarrier.CarryingSlot.EmptySlot();
             var slot = goalGridHandler.GetSlot(new Vector2(0, indexOfLetter));
@@ -87,27 +83,35 @@
             LetterManager.Instance.OnLetterClicked -= LetterClicked;
         }
 
-        private void MoveTableToGoalGrid(int wordIndex)
+        private IEnumerator MoveTableToGoalGrid(int wordIndex)
         {
             var tableSlots = TableManager.Instance.GetTableSlotsForGoal(wordIndex);
+            yield return new WaitForSeconds(0.6f);
             for (var index = 0; index < tableSlots.Count; index++)
             {
                 var slot = tableSlots[index];
                 var letterCarrier = slot.GetCarriedItem();
                 if (letterCarrier)
                 {
-                    PlaceLetterInGoal(letterCarrier, index);
+                    PlaceLetterInGoalGrid(letterCarrier, index);
                 }
             }
         }
 
-        private void MoveGridBToGoalGrid()
+        private IEnumerator MoveGridBToGoalGrid()
         {
+            yield return new WaitForSeconds(0.6f);
             foreach (var slot in gridB.Slots)
             {
                 var letterCarrier = slot.GetCarriedItem();
                 if (letterCarrier)
-                    GoalManager.Instance.TryGetIndexOfLetterInTheGoal(letterCarrier);
+                {
+                    int indexInGoal = GoalManager.Instance.TryGetIndexOfLetterInTheGoal(letterCarrier);
+                    if (indexInGoal != -1)
+                    {
+                        PlaceLetterInGoalGrid(letterCarrier, indexInGoal);
+                    }
+                }
             }
         }
 
