@@ -11,8 +11,8 @@ public class LevelManager : Singleton<LevelManager>
     
     LevelProgress levelProgress;
     public event Action LevelStarted;
-    
-    private void Awake()
+
+    protected override void Awake()
     {
         base.Awake();
         StartCoroutine(InitializeLevel());
@@ -21,13 +21,13 @@ public class LevelManager : Singleton<LevelManager>
     private IEnumerator InitializeLevel()
     {
         levelProgress = new LevelProgress(levelData.GoalWords.Count);
-        yield return null; // Ensures other managers are ready and subscribed
-        LevelStarted?.Invoke();
         GoalManager.Instance.GoalWordCompleted += HandleWordCompletion;
         GoalManager.Instance.GoalWordChanged += HandleGoalWordChanged;
+        yield return null; // Ensures other managers are ready and subscribed
+        LevelStarted?.Invoke();
     }
 
-    private void HandleGoalWordChanged(string goalWord, int goalWordIndex)
+    private void HandleGoalWordChanged(int goalWordIndex, int previousGoalWordIndex, int goalWordLength)
     {
         levelProgress.SetLevelWordStatus(goalWordIndex,LevelWordStatus.WordNotCompleted);
         levelProgress.CurrentWordIndex = goalWordIndex;
@@ -52,23 +52,32 @@ public class LevelManager : Singleton<LevelManager>
         }
     }
 
-    public (string, int) TryGetNextGoalWord()
+    public int TryGetNextGoalIndex()
     {
         int wordIndex = levelProgress.GetNextIncompleteWordIndex();
         Debug.Log("Next word index: " + wordIndex);
+        if (wordIndex == levelProgress.CurrentWordIndex)
+        {
+            Debug.Log("NO OTHER WORD LEFT");
+            return -1;
+        }
+
         if (wordIndex == -1)
         {
             Debug.Log("All words completed. Level ends.");
-            return (null, -1);
+            return -1;
         }
-        return (levelData.GoalWords[wordIndex], wordIndex);
+
+        return wordIndex;
     }
-    
-    public (string,int) TryGetFirstGoalWord()
+
+    public List<string> GetGoalWords()
     {
-        int wordIndex = levelProgress.GetFirstIncompleteWordIndex();
-        if (wordIndex == -1)
-            return (null, -1);
-        return (levelData.GoalWords[wordIndex], wordIndex);
+        return levelData.GoalWords;
+    }
+
+    public void SetGoalWordIndex(int goalIndex)
+    {
+        levelProgress.CurrentWordIndex = goalIndex;
     }
 }

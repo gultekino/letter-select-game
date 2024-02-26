@@ -1,12 +1,14 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 public class GoalManager : Singleton<GoalManager>
 {
+    private List<LevelGoal> levelGoals = new List<LevelGoal>();
     private LevelGoal activeGoal;
     public event Action<int> GoalWordCompleted;
-    public event Action<string, int> GoalWordChanged;
+    public event Action<int,int,int> GoalWordChanged; //int goalWordIndex, int previousGoalWordIndex, int goalWordLength
 
     private void Update()
     {
@@ -15,20 +17,11 @@ public class GoalManager : Singleton<GoalManager>
             ChangeGoalToNext();
         }
     }
+    
 
     private void ChangeGoalToNext()
     {
-        var (nextWord, nextIndex) = LevelManager.Instance.TryGetNextGoalWord();
-        if (nextIndex == -1) return;
-        
-        SetupGoal(nextWord, nextIndex);
-        GoalWordChanged?.Invoke(nextWord, nextIndex);
-    }
-
-    private void SetupGoal(string goalWord, int goalIndex)
-    {
-        activeGoal = new LevelGoal(goalWord, goalIndex);
-        GridsManager.Instance.PrepareGridForGoalWord(activeGoal.GoalWord.Length);
+        SetupNextGoal();
     }
 
     private void HandleLevelStarted()
@@ -36,68 +29,69 @@ public class GoalManager : Singleton<GoalManager>
         SetupFirstGoal();
     }
 
-    private void SetupFirstGoal()
-    {
-        var (goalWord, goalIndex) = LevelManager.Instance.TryGetFirstGoalWord();
-        SetupGoal(goalWord,goalIndex);
-    }
-
     private void SetupNextGoal()
     {
-        var (goalWord, goalIndex) = LevelManager.Instance.TryGetNextGoalWord();
-        SetupGoal(goalWord,goalIndex);
+        var goalIndex = LevelManager.Instance.TryGetNextGoalIndex();
+        if (goalIndex == -1)
+            return;
+
+        LevelManager.Instance.SetGoalWordIndex(goalIndex);
+        int previousGoalWordIndex = activeGoal.WordIndex;
+        activeGoal = levelGoals[goalIndex];
+        GoalWordChanged?.Invoke(goalIndex, previousGoalWordIndex, levelGoals[goalIndex].GoalWord.Length);
+    }
+    
+    private void SetupFirstGoal()
+    {
+        LevelManager.Instance.SetGoalWordIndex(0);
+        activeGoal = levelGoals[0];
+        GoalWordChanged?.Invoke(0, activeGoal.WordIndex, activeGoal.GoalWord.Length);
     }
     
     private void CompleteGoal()
     {
-        LetterManager.Instance.MoveLettersToTable(activeGoal.WordIndex);
         GoalWordCompleted?.Invoke(activeGoal.WordIndex);
         SetupNextGoal();
     }
     
     private void Start()
     {
+        var goalWords = LevelManager.Instance.GetGoalWords();
+        for (int i = 0; i < goalWords.Count; i++)
+        {
+            levelGoals.Add(new LevelGoal(goalWords[i], i));
+        }
         LevelManager.Instance.LevelStarted += HandleLevelStarted;
     }
     private void OnDisable()
     {
         LevelManager.Instance.LevelStarted -= HandleLevelStarted;
     }
-
-    private bool TrySelectLetter(LetterCarrier letterCarrier)
+    
+    public int TryGetIndexOfLetterInTheGoal(LetterCarrier letterCarrier)
     {
         var letter = letterCarrier.GetLetter();
         var positionToFill = TryGetPositionToFill(letter);
         if (positionToFill == -1)
-            return false;
-
-        activeGoal.MarkLetterAsFilled(positionToFill);
-        GridsManager.Instance.PlaceLetterInGoal(letterCarrier, positionToFill);
-
-        if (activeGoal.IsGoalCompleted())
-            CompleteGoal();
-
-        return true;
+            return -1;
+        
+        return positionToFill;
     }
     
     private int TryGetPositionToFill(char letter)
     {
-        var targetPositions = activeGoal.GoalWord.AllIndexesOf(letter);
+        var targetPositions = activeGoal.GoalWord.AllIndexesOf(letter).Where(pos=> activeGoal.IsPositionEmpty(pos));
         if (!targetPositions.Any())
         {
             return -1;
         }
-
-        var positionToFill = targetPositions.FirstOrDefault(pos => activeGoal.IsPositionEmpty(pos));
-        if (positionToFill == -1)
-        {
-            return -1;
-        }
-
-        return positionToFill;
+        return targetPositions.First();
     }
-    public bool PartOfTheGoal(LetterCarrier letterCarrier)
+
+    public void LetterInGoalSelected(int letterIndexInTheGoal)
     {
-        return TrySelectLetter(letterCarrier);
+        activeGoal.MarkLetterAsFilled(letterIndexInTheGoal);
+        if (activeGoal.IsGoalCompleted())
+            CompleteGoal();
     }
 }
