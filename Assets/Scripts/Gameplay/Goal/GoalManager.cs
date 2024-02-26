@@ -31,7 +31,7 @@ public class GoalManager : Singleton<GoalManager>
 
     private void SetupNextGoal()
     {
-        var (goalWord, goalIndex) = LevelManager.Instance.TryGetNextGoalIndex();
+        var goalIndex = LevelManager.Instance.TryGetNextGoalIndex();
         if (goalIndex == -1)
             return;
 
@@ -80,7 +80,7 @@ public class GoalManager : Singleton<GoalManager>
     
     private int TryGetPositionToFill(char letter)
     {
-        var targetPositions = activeGoal.GoalWord.AllIndexesOf(letter).Where(pos=>activeGoal.IsPositionEmpty(pos));
+        var targetPositions = activeGoal.GoalWord.AllIndexesOf(letter).Where(pos=> activeGoal.IsPositionEmpty(pos));
         if (!targetPositions.Any())
         {
             return -1;

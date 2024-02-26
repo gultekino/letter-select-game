@@ -52,29 +52,23 @@ public class LevelManager : Singleton<LevelManager>
         }
     }
 
-    public (string, int) TryGetNextGoalIndex()
+    public int TryGetNextGoalIndex()
     {
         int wordIndex = levelProgress.GetNextIncompleteWordIndex();
         Debug.Log("Next word index: " + wordIndex);
         if (wordIndex == levelProgress.CurrentWordIndex)
         {
             Debug.Log("NO OTHER WORD LEFT");
-            return (null, -1);
+            return -1;
         }
-        if (wordIndex == -1) 
+
+        if (wordIndex == -1)
         {
             Debug.Log("All words completed. Level ends.");
-            return (null, -1);
+            return -1;
         }
-        return (levelData.GoalWords[wordIndex], wordIndex);
-    }
-    
-    public (string,int) TryGetFirstGoalWord()
-    {
-        int wordIndex = levelProgress.GetFirstIncompleteWordIndex();
-        if (wordIndex == -1)
-            return (null, -1);
-        return (levelData.GoalWords[wordIndex], wordIndex);
+
+        return wordIndex;
     }
 
     public List<string> GetGoalWords()

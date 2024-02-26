@@ -37,6 +37,7 @@
         private IEnumerator GoalWordChanged(int goalWordIndex, int previousGoalWordIndex, int goalWordLength)
         {
             MoveGoalToTable(previousGoalWordIndex);
+            goalGridHandler.DestroySlots();
             goalGridHandler.InitializeGrid(goalWordLength);
             yield return new WaitForSeconds(0.6f);
             yield return MoveTableToGoalGrid(goalWordIndex);
@@ -60,7 +61,6 @@
             if (letterIndexInTheGoal != -1)//If the letter is in the goal grid
             {
                 PlaceLetterInGoalGrid(letterCarrier,letterIndexInTheGoal);
-                GoalManager.Instance.LetterInGoalSelected(letterIndexInTheGoal);
             }
             else
             {
@@ -74,9 +74,8 @@
             var slot = goalGridHandler.GetSlot(new Vector2(0, indexOfLetter));
             slot.CarryItem(letterCarrier);
             letterCarrier.GetCarried(slot);
+            GoalManager.Instance.LetterInGoalSelected(indexOfLetter);
         }
-        
-        public int GetGridBEmptySlotCount() => gridB.GetEmptySlotsCount();
         
         private void OnDisable()
         {
@@ -100,7 +99,7 @@
 
         private IEnumerator MoveGridBToGoalGrid()
         {
-            yield return new WaitForSeconds(0.6f);
+            yield return new WaitForSeconds(0.75f);
             foreach (var slot in gridB.Slots)
             {
                 var letterCarrier = slot.GetCarriedItem();
@@ -118,10 +117,5 @@
         public void EmptyASlot(Slot slot)
         {
             slot.EmptySlot();
-        }
-
-        public List<Slot> GetGoalGridSlots()
-        {
-            return goalGridHandler.Slots;
         }
     }
