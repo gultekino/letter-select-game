@@ -31,22 +31,34 @@
 
         private void HandleGoalWordChanged(int goalWordIndex, int previousGoalWordIndex, int goalWordLength)
         {
-            StartCoroutine(GoalWordChanged(goalWordIndex, previousGoalWordIndex, goalWordLength));
+            //StartCoroutine(GoalWordChanged(goalWordIndex, previousGoalWordIndex, goalWordLength));
+            goalChangeQueue.Enqueue(GoalWordChanged(goalWordIndex, previousGoalWordIndex, goalWordLength));
+            StartCoroutine(ASD());
         }
 
+        private bool isGoalChanging = false;
+        Queue<IEnumerator> goalChangeQueue = new Queue<IEnumerator>();
+
+        private IEnumerator ASD()
+        {
+            while (goalChangeQueue.Count > 0 && !isGoalChanging)
+                yield return StartCoroutine(goalChangeQueue.Dequeue());
+        }
         private IEnumerator GoalWordChanged(int goalWordIndex, int previousGoalWordIndex, int goalWordLength)
         {
-            MoveGoalToTable(previousGoalWordIndex);
-            goalGridHandler.DestroySlots();
+            isGoalChanging = true;
+            var goalSlots = goalGridHandler.Slots;
+            yield return MoveGoalToTable(previousGoalWordIndex,goalSlots);
+            goalGridHandler.DestroySlotsParent();
             goalGridHandler.InitializeGrid(goalWordLength);
-            yield return new WaitForSeconds(0.6f);
             yield return MoveTableToGoalGrid(goalWordIndex);
             yield return MoveGridBToGoalGrid();
+            isGoalChanging = false;
         }
 
-        private void MoveGoalToTable(int goalWordIndex)
+        private IEnumerator MoveGoalToTable(int goalWordIndex, List<Slot> goalSlots)
         {
-            var goalSlots = goalGridHandler.Slots;
+            yield return new WaitForSeconds(0.5f);
             TableManager.Instance.FillWordInTable(goalSlots, goalWordIndex);
         }
 
@@ -54,7 +66,7 @@
         {
             var emptySlot = gridB.GetEmptySlot();
             
-            if (emptySlot == null)
+            if (emptySlot == null || isGoalChanging) //Blocks input while goal is changing
                 return; 
             
             var letterIndexInTheGoal = GoalManager.Instance.TryGetIndexOfLetterInTheGoal(letterCarrier);
@@ -99,7 +111,7 @@
 
         private IEnumerator MoveGridBToGoalGrid()
         {
-            yield return new WaitForSeconds(0.75f);
+            yield return new WaitForSeconds(0.1f);
             foreach (var slot in gridB.Slots)
             {
                 var letterCarrier = slot.GetCarriedItem();
