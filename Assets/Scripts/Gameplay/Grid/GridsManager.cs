@@ -11,7 +11,7 @@
         
         private GridHandler gridA;
         private GridHandler gridB;
-        private bool goalCompleted = false;
+        private bool newGoalCompleted = false;
         private bool isGoalChanging = false;
         Queue<IEnumerator> goalChangeQueue = new Queue<IEnumerator>();
 
@@ -66,7 +66,7 @@
         {
             if (isGoalChanging)
             {
-                goalCompleted = true;
+                newGoalCompleted = true;
                 yield break;
             }
 
@@ -113,9 +113,9 @@
             yield return new WaitForSeconds(0.1f);
             foreach (var slot in gridB.Slots)
             {
-                if (goalCompleted) // GridB can complete the goal so it should listen to the goalCompleted flag
+                if (newGoalCompleted) // GridB can complete the goal so it should listen to the goalCompleted flag
                 {
-                    goalCompleted = false;
+                    newGoalCompleted = false;
                     yield break;
                 }
                 
