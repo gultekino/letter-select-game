@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Slot
@@ -6,11 +7,11 @@ public class Slot
     private bool isOccupied;
     public SlotLocation SlotLocation { get; set; }
     
-    private ICarryable carryable;
-    public ICarryable Carryable
+    private ICarryable letterCarrier;
+    public ICarryable LetterCarrier
     {
-        get => carryable;
-        set => carryable = value;
+        get => letterCarrier;
+        set => letterCarrier = value;
     }
 
     public Vector2 Cords => cords;
@@ -29,15 +30,20 @@ public class Slot
     public void EmptySlot()
     {
         isOccupied = false;
-        carryable = null;
+        letterCarrier = null;
     }
 
-    public void CarryItem(ICarryable carryable)
+    public void CarryItem(LetterCarrier letterCarrier)
     {
         if (isOccupied)
             Debug.Log("You are trying to carry an item to an occupied slot!"); 
 
-        this.carryable = carryable;
+        this.letterCarrier = letterCarrier;
         isOccupied = true;
+    }
+
+    public LetterCarrier GetCarriedItem()
+    {
+        return (LetterCarrier) letterCarrier;
     }
 }

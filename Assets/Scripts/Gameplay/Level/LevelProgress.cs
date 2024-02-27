@@ -10,6 +10,7 @@ class LevelProgress
     public LevelProgress(int wordCount)
     {
         this.wordCount = wordCount;
+        CurrentWordIndex = -1;
         levelWordsStatus = Enumerable.Repeat(LevelWordStatus.WordNotCompleted, wordCount).ToList();
     }
 

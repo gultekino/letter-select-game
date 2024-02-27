@@ -56,4 +56,9 @@ public class GridHandler : MonoBehaviour
     {
         return Slots.Count(slot => !slot.IsOccupied);
     }
+
+    public void DestroySlotsParent()
+    {
+        Destroy(slotsParent.gameObject);
+    }
 }
