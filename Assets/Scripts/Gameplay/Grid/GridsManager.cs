@@ -127,6 +127,7 @@
                 {
                     PlaceLetterInGoalGrid(letterCarrier, indexInGoal);
                 }
+                gridB.AlignLettersToRight();
             }
         }
         

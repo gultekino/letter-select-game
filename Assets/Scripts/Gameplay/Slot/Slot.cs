@@ -6,8 +6,9 @@ public class Slot
     private Vector2 cords;
     private bool isOccupied;
     public SlotLocation SlotLocation { get; set; }
-    
+
     private ICarryable letterCarrier;
+
     public ICarryable LetterCarrier
     {
         get => letterCarrier;
@@ -15,7 +16,7 @@ public class Slot
     }
 
     public Vector2 Cords => cords;
-    public bool IsOccupied=> isOccupied;
+    public bool IsOccupied => isOccupied;
 
     public Vector3 WorldPosition { get; set; }
 
@@ -36,7 +37,7 @@ public class Slot
     public void CarryItem(LetterCarrier letterCarrier)
     {
         if (isOccupied)
-            Debug.Log("You are trying to carry an item to an occupied slot!"); 
+            Debug.Log("You are trying to carry an item to an occupied slot!");
 
         this.letterCarrier = letterCarrier;
         isOccupied = true;
@@ -44,6 +45,17 @@ public class Slot
 
     public LetterCarrier GetCarriedItem()
     {
-        return (LetterCarrier) letterCarrier;
+        return (LetterCarrier)letterCarrier;
+    }
+
+    public void ChangeLetterWithAnotherSlot(Slot anotherSlot)
+    {
+        (anotherSlot.letterCarrier, this.letterCarrier) = (this.letterCarrier, anotherSlot.letterCarrier);
+        (anotherSlot.isOccupied, this.isOccupied) = (this.isOccupied, anotherSlot.isOccupied);
+        
+        if (anotherSlot.IsOccupied)
+            anotherSlot.letterCarrier.GetCarried(anotherSlot);
+        if (this.IsOccupied)
+            this.letterCarrier.GetCarried(this);
     }
 }

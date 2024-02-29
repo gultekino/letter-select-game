@@ -61,4 +61,22 @@ public class GridHandler : MonoBehaviour
     {
         Destroy(slotsParent.gameObject);
     }
+
+    public void AlignLettersToRight()
+    {
+        Slot emptySlot=null;
+        for (int i = 0; i < Slots.Count; i++)
+        {
+            if (Slots[i].IsOccupied && emptySlot != null)
+            {
+                emptySlot.ChangeLetterWithAnotherSlot(Slots[i]);
+                emptySlot= Slots[i];
+                continue;
+            }
+            if (!Slots[i].IsOccupied)
+            {
+                emptySlot = Slots[i];
+            }
+        }
+    }
 }
