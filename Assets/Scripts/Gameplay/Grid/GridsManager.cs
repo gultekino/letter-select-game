@@ -17,11 +17,6 @@
 
         #region Initialization
 
-        protected override void Awake()
-        {
-            base.Awake();
-        }
-
         private void Start()
         {
             InitializeGrids();
@@ -133,8 +128,8 @@
                 {
                     PlaceLetterInGoalGrid(letterCarrier, indexInGoal);
                 }
-                gridB.AlignLettersToRight();
             }
+            gridB.AlignLettersToRight();
         }
         #endregion
        

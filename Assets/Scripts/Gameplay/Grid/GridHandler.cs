@@ -34,7 +34,9 @@ public class GridHandler : MonoBehaviour
 
     public void FillGridWithLetterCarriers()
     {
-        var letterFrequency = GoalManager.Instance.GetLetterFrequencies();
+        var letterFrequency = GoalManager.Instance.GetLetterFrequencies().
+            Select(frequency => new LetterFrequency(frequency.Letter,frequency.Frequency) ).ToList(); //copy of the list
+        
         letterFrequency.ForEach(obj => obj.Frequency += Random.Range(0, 2));
         
         foreach (var letter in letterFrequency)
@@ -50,13 +52,6 @@ public class GridHandler : MonoBehaviour
                 slot.CarryItem(letterCarrier);
             }
         }
-        
-        /*foreach (var slot in Slots)
-        {
-            var letterCarrier = LetterManager.Instance.SpawnLetterCarrier(slot);
-            slot.CarryItem(letterCarrier);
-        }
-        */
     }
 
     public Slot GetEmptySlot()
@@ -82,15 +77,16 @@ public class GridHandler : MonoBehaviour
 
     public void AlignLettersToRight()
     {
-        Slot emptySlot=null;
+        Slot emptySlot = null;
         for (int i = 0; i < Slots.Count; i++)
         {
             if (Slots[i].IsOccupied && emptySlot != null)
             {
                 emptySlot.ChangeLetterWithAnotherSlot(Slots[i]);
-                emptySlot= Slots[i];
-                continue;
+                AlignLettersToRight();
+                return;
             }
+
             if (!Slots[i].IsOccupied)
             {
                 emptySlot = Slots[i];
