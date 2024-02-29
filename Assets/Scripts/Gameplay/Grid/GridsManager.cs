@@ -56,7 +56,8 @@
 
         #endregion
 
-        private void HandleGoalWordChanged(int goalWordIndex, int previousGoalWordIndex, int goalWordLength)
+        #region GoalWordChanged
+         private void HandleGoalWordChanged(int goalWordIndex, int previousGoalWordIndex, int goalWordLength)
         {
             goalChangeQueue.Enqueue(GoalWordChanged(goalWordIndex, previousGoalWordIndex, goalWordLength));
             StartCoroutine(HandleGoalWordChanges());
@@ -130,6 +131,8 @@
                 gridB.AlignLettersToRight();
             }
         }
+        #endregion
+       
         
         private void LetterClicked(LetterCarrier letterCarrier)
         {
@@ -138,6 +141,7 @@
             if (emptySlot == null || isGoalChanging) //Blocks input while goal is changing
                 return; 
             
+            var letterCarrierSlot = letterCarrier.CarryingSlot;
             var letterIndexInTheGoal = GoalManager.Instance.TryGetIndexOfLetterInTheGoal(letterCarrier);
             if (letterIndexInTheGoal != -1)//If the letter is in the goal grid
             {
@@ -147,6 +151,7 @@
             {
                 LetterManager.Instance.MoveLetterGridB(letterCarrier, emptySlot);
             }
+            gridA.AlignLettersToDown(letterCarrierSlot);
         }
         
         private void PlaceLetterInGoalGrid(LetterCarrier letterCarrier, int indexOfLetter)

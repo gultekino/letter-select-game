@@ -79,4 +79,16 @@ public class GridHandler : MonoBehaviour
             }
         }
     }
+
+    public void AlignLettersToDown(Slot emptiedSlot)
+    {
+        int indexOfEmptiedSlot = Slots.IndexOf(emptiedSlot);
+        for (int i = indexOfEmptiedSlot; i < Slots.Count; i+=gridConfiguration.Row)
+        {
+            if (i + gridConfiguration.Row < Slots.Count && Slots[i + gridConfiguration.Row].IsOccupied)
+            {
+                Slots[i].ChangeLetterWithAnotherSlot(Slots[i + gridConfiguration.Row]);
+            }
+        }
+    }
 }
