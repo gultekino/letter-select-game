@@ -80,4 +80,9 @@ public class LevelManager : Singleton<LevelManager>
     {
         levelProgress.CurrentWordIndex = goalIndex;
     }
+
+    public List<LetterFrequency> GetLetterFrequencies()
+    {
+        return levelData.LetterFrequencies;
+    }
 }

@@ -22,22 +22,6 @@ public class LetterCarrier : MonoBehaviour, ICarryable, ISelecable
         TrySelect();
     }
 
-    private void Awake()
-    {
-        var rndV = Random.value;
-        if (rndV> 0.66f)
-        {
-            tmpText.SetText("A");
-        }else if (rndV > 0.33f)
-        {
-            tmpText.SetText("B");
-        }
-        else
-        {
-            tmpText.SetText("L");
-        }
-    }
-
     public void TrySelect()
     {
         if (carryingSlot.SlotLocation == SlotLocation.GridA)
@@ -73,5 +57,10 @@ public class LetterCarrier : MonoBehaviour, ICarryable, ISelecable
     public char GetLetter()
     {
         return tmpText.text[0];
+    }
+
+    public void SetLetter(char letter)
+    {
+        tmpText.text = letter.ToString();
     }
 }

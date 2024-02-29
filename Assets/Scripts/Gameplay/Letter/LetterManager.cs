@@ -7,10 +7,11 @@ public class LetterManager : Singleton<LetterManager>
     public event Action<LetterCarrier> OnLetterClicked;
 
     [SerializeField] LetterCarrier letterCarrierPrefab;
-    public LetterCarrier SpawnLetterCarrier(Slot slot)
+    public LetterCarrier SpawnLetterCarrier(Slot slot,char letter)
     {
         var letterCarrier = Instantiate(letterCarrierPrefab);
         letterCarrier.GetCarried(slot);
+        letterCarrier.SetLetter(letter);
         return letterCarrier;
     }
 

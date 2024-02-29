@@ -34,11 +34,29 @@ public class GridHandler : MonoBehaviour
 
     public void FillGridWithLetterCarriers()
     {
-        foreach (var slot in Slots)
+        var letterFrequency = GoalManager.Instance.GetLetterFrequencies();
+        letterFrequency.ForEach(obj => obj.Frequency += Random.Range(0, 2));
+        
+        foreach (var letter in letterFrequency)
+        {
+            for (int i = 0; i < letter.Frequency; i++)
+            {
+                var slot = GetEmptySlot();
+                if (slot == null){
+                    Debug.Log("No empty slot left!");
+                    break;
+                }
+                var letterCarrier = LetterManager.Instance.SpawnLetterCarrier(slot, letter.Letter);
+                slot.CarryItem(letterCarrier);
+            }
+        }
+        
+        /*foreach (var slot in Slots)
         {
             var letterCarrier = LetterManager.Instance.SpawnLetterCarrier(slot);
             slot.CarryItem(letterCarrier);
         }
+        */
     }
 
     public Slot GetEmptySlot()

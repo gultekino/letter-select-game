@@ -20,8 +20,13 @@
         protected override void Awake()
         {
             base.Awake();
+        }
+
+        private void Start()
+        {
             InitializeGrids();
         }
+
         private void InitializeGrids()
         {
             gridA = gridHandlers[0];

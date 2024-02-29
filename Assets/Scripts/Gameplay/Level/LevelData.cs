@@ -9,4 +9,7 @@ public class LevelData
     
     [SerializeField] private List<string> goalWords;
     public List<string> GoalWords => goalWords;
+    
+    [SerializeField] private List<LetterFrequency> letterFrequencies;
+    public List<LetterFrequency> LetterFrequencies => letterFrequencies;
 }

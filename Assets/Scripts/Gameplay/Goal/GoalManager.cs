@@ -10,6 +10,18 @@ public class GoalManager : Singleton<GoalManager>
     public event Action<int> GoalWordCompleted;
     public event Action<int,int,int> GoalWordChanged; //int goalWordIndex, int previousGoalWordIndex, int goalWordLength
 
+    #region Unity Methods
+
+    private void Start()
+    {
+        var goalWords = LevelManager.Instance.GetGoalWords();
+        for (int i = 0; i < goalWords.Count; i++)
+        {
+            levelGoals.Add(new LevelGoal(goalWords[i], i));
+        }
+        LevelManager.Instance.LevelStarted += HandleLevelStarted;
+    }
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.A))
@@ -17,7 +29,17 @@ public class GoalManager : Singleton<GoalManager>
             ChangeGoalToNext();
         }
     }
-    
+
+    private void OnDisable()
+    {
+        LevelManager.Instance.LevelStarted -= HandleLevelStarted;
+    }
+    #endregion
+   
+    public List<LetterFrequency> GetLetterFrequencies()
+    {
+        return LevelManager.Instance.GetLetterFrequencies();
+    }
 
     private void ChangeGoalToNext()
     {
@@ -54,19 +76,7 @@ public class GoalManager : Singleton<GoalManager>
         SetupNextGoal();
     }
     
-    private void Start()
-    {
-        var goalWords = LevelManager.Instance.GetGoalWords();
-        for (int i = 0; i < goalWords.Count; i++)
-        {
-            levelGoals.Add(new LevelGoal(goalWords[i], i));
-        }
-        LevelManager.Instance.LevelStarted += HandleLevelStarted;
-    }
-    private void OnDisable()
-    {
-        LevelManager.Instance.LevelStarted -= HandleLevelStarted;
-    }
+   
     
     public int TryGetIndexOfLetterInTheGoal(LetterCarrier letterCarrier)
     {
