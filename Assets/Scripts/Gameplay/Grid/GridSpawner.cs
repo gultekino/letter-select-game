@@ -14,8 +14,8 @@ public class GridSpawner
             {
                 float x = row * gridConfigurationData.OffsetBetweenSlots.x - (gridConfigurationData.Row-1) * gridConfigurationData.OffsetBetweenSlots.x / 2;
                 float y = column * gridConfigurationData.OffsetBetweenSlots.y - (gridConfigurationData.Column-1) * gridConfigurationData.OffsetBetweenSlots.y / 2;
-                Vector2 move = gridConfigurationData.GridCenterPosition - new Vector2(x, y);
-                regularSlots.Add(new Slot(new Vector2(row, column), false,move,slotLocation));
+                Vector2 move = gridConfigurationData.GridCenterPosition + new Vector2(x, y);
+                regularSlots.Add(new Slot(new Vector2(row, column), false,move,slotLocation,gridConfigurationData.TargetScale));
                 var gridSlot =  Object.Instantiate(slotPrefab, gridSlotsParent);
                 gridSlot.transform.position = move;
                 

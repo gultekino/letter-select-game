@@ -82,7 +82,7 @@ public class GridHandler : MonoBehaviour
         {
             if (Slots[i].IsOccupied && emptySlot != null)
             {
-                emptySlot.ChangeLetterWithAnotherSlot(Slots[i]);
+                emptySlot.SwapItemsWith(Slots[i]);
                 AlignLettersToRight();
                 return;
             }
@@ -101,7 +101,7 @@ public class GridHandler : MonoBehaviour
         {
             if (i + gridConfiguration.Row < Slots.Count && Slots[i + gridConfiguration.Row].IsOccupied)
             {
-                Slots[i].ChangeLetterWithAnotherSlot(Slots[i + gridConfiguration.Row]);
+                Slots[i].SwapItemsWith(Slots[i + gridConfiguration.Row]);
             }
         }
     }

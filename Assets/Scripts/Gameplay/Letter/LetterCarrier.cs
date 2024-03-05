@@ -38,6 +38,7 @@ public class LetterCarrier : MonoBehaviour, ICarryable, ISelecable
         this.carryingSlot = carryingSlot;
         isGettingCarried = true;
         transform.DOMove(carryingSlot.WorldPosition, 0.5f);
+        transform.DOScale(carryingSlot.ItemTargetScale, 0.5f);
     }
 
     public bool IsGettingCarried()
