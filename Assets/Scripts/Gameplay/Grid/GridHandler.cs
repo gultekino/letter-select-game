@@ -29,7 +29,7 @@ public class GridHandler : MonoBehaviour
 
     private int GetIndex(Vector2 gridPosition)
     {
-        return gridConfiguration.Row * (int)gridPosition.x + (int)gridPosition.y;
+        return gridConfiguration.Row * (int)gridPosition.y + (int)gridPosition.x;
     }
 
     public void FillGridWithLetterCarriers()
@@ -95,6 +95,14 @@ public class GridHandler : MonoBehaviour
             {
                 Slots[i].SwapItemsWith(Slots[i + gridConfiguration.Row]);
             }
+        }
+    }
+
+    public void AlignAllLettersToDown()
+    {
+        for (int i = 0; i < gridConfiguration.Row; i++)
+        {
+            AlignLettersToDown(GetSlot(new Vector2(i,0)));
         }
     }
 }

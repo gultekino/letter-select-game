@@ -29,6 +29,7 @@
             gridA.InitializeGrid();
             gridB.InitializeGrid();
             gridA.FillGridWithLetterCarriers();
+            gridA.AlignAllLettersToDown();
         }
         #region Events Subscriptions
         private void OnEnable()
