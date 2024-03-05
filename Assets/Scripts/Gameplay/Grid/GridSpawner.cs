@@ -12,13 +12,15 @@ public class GridSpawner
         {
             for (int row = 0; row < gridConfigurationData.Row; row++)
             {
-                var pos =gridConfigurationData.GridPosition + new Vector2(row * 1, column * 1);
-                regularSlots.Add(new Slot(new Vector2(row, column), false,pos,slotLocation));
-                var gridSlot =  GameObject.Instantiate(slotPrefab, gridSlotsParent);
-                gridSlot.transform.position = pos;
+                float x = row * gridConfigurationData.OffsetBetweenSlots.x - (gridConfigurationData.Row-1) * gridConfigurationData.OffsetBetweenSlots.x / 2;
+                float y = column * gridConfigurationData.OffsetBetweenSlots.y - (gridConfigurationData.Column-1) * gridConfigurationData.OffsetBetweenSlots.y / 2;
+                Vector2 move = gridConfigurationData.GridCenterPosition + new Vector2(x, y);
+                regularSlots.Add(new Slot(new Vector2(row, column), false,move,slotLocation,gridConfigurationData.TargetScale));
+                var gridSlot =  Object.Instantiate(slotPrefab, gridSlotsParent);
+                gridSlot.transform.position = move;
+                
             }
         }
-
         return regularSlots;
     }
 }

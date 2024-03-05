@@ -34,10 +34,23 @@ public class GridHandler : MonoBehaviour
 
     public void FillGridWithLetterCarriers()
     {
-        foreach (var slot in Slots)
+        var letterFrequency = GoalManager.Instance.GetLetterFrequencies().
+            Select(frequency => new LetterFrequency(frequency.Letter,frequency.Frequency) ).ToList(); //copy of the list so on editor id doesn't override the original list
+        
+        letterFrequency.ForEach(obj => obj.Frequency += Random.Range(1, 3));
+        
+        foreach (var letter in letterFrequency)
         {
-            var letterCarrier = LetterManager.Instance.SpawnLetterCarrier(slot);
-            slot.CarryItem(letterCarrier);
+            for (int i = 0; i < letter.Frequency; i++)
+            {
+                var slot = GetEmptySlot();
+                if (slot == null){
+                    Debug.Log("No empty slot left!");
+                    break;
+                }
+                var letterCarrier = LetterManager.Instance.SpawnLetterCarrier(slot, letter.Letter);
+                slot.CarryItem(letterCarrier);
+            }
         }
     }
 
@@ -60,5 +73,36 @@ public class GridHandler : MonoBehaviour
     public void DestroySlotsParent()
     {
         Destroy(slotsParent.gameObject);
+    }
+
+    public void AlignLettersToRight()
+    {
+        Slot emptySlot = null;
+        for (int i = 0; i < Slots.Count; i++)
+        {
+            if (Slots[i].IsOccupied && emptySlot != null)
+            {
+                emptySlot.SwapItemsWith(Slots[i]);
+                AlignLettersToRight();
+                return;
+            }
+
+            if (!Slots[i].IsOccupied)
+            {
+                emptySlot = Slots[i];
+            }
+        }
+    }
+
+    public void AlignLettersToDown(Slot emptiedSlot)
+    {
+        int indexOfEmptiedSlot = Slots.IndexOf(emptiedSlot);
+        for (int i = indexOfEmptiedSlot; i < Slots.Count; i+=gridConfiguration.Row)
+        {
+            if (i + gridConfiguration.Row < Slots.Count && Slots[i + gridConfiguration.Row].IsOccupied)
+            {
+                Slots[i].SwapItemsWith(Slots[i + gridConfiguration.Row]);
+            }
+        }
     }
 }

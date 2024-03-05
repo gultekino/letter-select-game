@@ -18,3 +18,16 @@ MonoBehaviour:
     - LAAL
     - LLLLA
     - PATATES
+    letterFrequencies:
+    - Letter: 76
+      Frequency: 6
+    - Letter: 65
+      Frequency: 5
+    - Letter: 80
+      Frequency: 1
+    - Letter: 84
+      Frequency: 2
+    - Letter: 69
+      Frequency: 1
+    - Letter: 83
+      Frequency: 1
