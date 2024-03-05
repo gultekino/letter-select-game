@@ -35,9 +35,9 @@ public class GridHandler : MonoBehaviour
     public void FillGridWithLetterCarriers()
     {
         var letterFrequency = GoalManager.Instance.GetLetterFrequencies().
-            Select(frequency => new LetterFrequency(frequency.Letter,frequency.Frequency) ).ToList(); //copy of the list
+            Select(frequency => new LetterFrequency(frequency.Letter,frequency.Frequency) ).ToList(); //copy of the list so on editor id doesn't override the original list
         
-        letterFrequency.ForEach(obj => obj.Frequency += Random.Range(0, 2));
+        letterFrequency.ForEach(obj => obj.Frequency += Random.Range(1, 3));
         
         foreach (var letter in letterFrequency)
         {
