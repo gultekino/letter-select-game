@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Array2DEditor;
 using UnityEngine;
 
 [System.Serializable]
@@ -12,4 +13,5 @@ public class LevelData
     
     [SerializeField] private List<LetterFrequency> letterFrequencies;
     public List<LetterFrequency> LetterFrequencies => letterFrequencies;
+    public Array2DChar arr;
 }
