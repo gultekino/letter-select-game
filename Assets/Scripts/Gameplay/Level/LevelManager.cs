@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Array2DEditor;
 using UnityEngine;
 
 public class LevelManager : Singleton<LevelManager>
@@ -80,9 +81,9 @@ public class LevelManager : Singleton<LevelManager>
     {
         levelProgress.CurrentWordIndex = goalIndex;
     }
-
-    public List<LetterFrequency> GetLetterFrequencies()
+    
+    public Array2DString GetGridMap()
     {
-        return levelData.LetterFrequencies;
+        return levelData.GridMap;
     }
 }

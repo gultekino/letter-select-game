@@ -11,7 +11,6 @@ public class LevelData
     [SerializeField] private List<string> goalWords;
     public List<string> GoalWords => goalWords;
     
-    [SerializeField] private List<LetterFrequency> letterFrequencies;
-    public List<LetterFrequency> LetterFrequencies => letterFrequencies;
-    public Array2DChar arr;
+    [SerializeField] private Array2DString gridMap;
+    public Array2DString GridMap => gridMap;
 }

@@ -31,3 +31,49 @@ MonoBehaviour:
       Frequency: 1
     - Letter: 83
       Frequency: 1
+    gridMap:
+      gridSize: {x: 6, y: 6}
+      cellSize: {x: 16, y: 16}
+      cells:
+      - row:
+        - 
+        - 
+        - 
+        - 
+        - 
+        - 
+      - row:
+        - 
+        - 
+        - 
+        - 
+        - 
+        - 
+      - row:
+        - 
+        - 
+        - 
+        - 
+        - 
+        - S
+      - row:
+        - E
+        - T
+        - A
+        - T
+        - A
+        - P
+      - row:
+        - L
+        - A
+        - L
+        - L
+        - A
+        - A
+      - row:
+        - L
+        - 
+        - 
+        - 
+        - 
+        - 

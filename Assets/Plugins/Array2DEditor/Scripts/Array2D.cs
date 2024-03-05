@@ -62,7 +62,7 @@ namespace Array2DEditor
             {
                 for (int x = 0; x < gridSize.x; x++)
                 {
-                    yield return this[y, x];
+                    yield return this[x, ((gridSize.y-1)-y)];
                 }
             }
         }

@@ -34,23 +34,15 @@ public class GridHandler : MonoBehaviour
 
     public void FillGridWithLetterCarriers()
     {
-        var letterFrequency = GoalManager.Instance.GetLetterFrequencies().
-            Select(frequency => new LetterFrequency(frequency.Letter,frequency.Frequency) ).ToList(); //copy of the list so on editor id doesn't override the original list
+        var letterMap = GoalManager.Instance.GetGridMap().ToList(); //copy of the list so on editor id doesn't override the original list
         
-        letterFrequency.ForEach(obj => obj.Frequency += Random.Range(1, 3));
-        
-        foreach (var letter in letterFrequency)
+        for (int i = 0; i < letterMap.Count; i++)
         {
-            for (int i = 0; i < letter.Frequency; i++)
-            {
-                var slot = GetEmptySlot();
-                if (slot == null){
-                    Debug.Log("No empty slot left!");
-                    break;
-                }
-                var letterCarrier = LetterManager.Instance.SpawnLetterCarrier(slot, letter.Letter);
-                slot.CarryItem(letterCarrier);
-            }
+            if (letterMap[i] == "")
+                continue;
+            var slot = Slots[i];
+            var letterCarrier = LetterManager.Instance.SpawnLetterCarrier(slot, letterMap[i][0]);
+            slot.CarryItem(letterCarrier);
         }
     }
 
