@@ -158,7 +158,7 @@
         private void PlaceLetterInGoalGrid(LetterCarrier letterCarrier, int indexOfLetter)
         {
             letterCarrier.CarryingSlot.EmptySlot();
-            var slot = goalGridHandler.GetSlot(new Vector2(0, indexOfLetter));
+            var slot = goalGridHandler.GetSlot(new Vector2(indexOfLetter, 0));
             slot.CarryItem(letterCarrier);
             letterCarrier.GetCarried(slot);
             GoalManager.Instance.LetterInGoalSelected(indexOfLetter);
