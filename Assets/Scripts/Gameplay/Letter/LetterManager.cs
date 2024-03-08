@@ -2,10 +2,13 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+public struct LetterClickedEvent : IEvent
+{
+    public LetterCarrier letterCarrier;
+}
+
 public class LetterManager : Singleton<LetterManager>
 {
-    public event Action<LetterCarrier> OnLetterClicked;
-
     [SerializeField] LetterCarrier letterCarrierPrefab;
     public LetterCarrier SpawnLetterCarrier(Slot slot,char letter)
     {
@@ -17,7 +20,7 @@ public class LetterManager : Singleton<LetterManager>
 
     public void LetterClicked(LetterCarrier letterCarrier)
     {
-        OnLetterClicked?.Invoke(letterCarrier);
+        EventBus<LetterClickedEvent>.Raise(new LetterClickedEvent(){letterCarrier = letterCarrier});
     }
 
     public void MoveLetterGridB(LetterCarrier letterCarrier,Slot carryingSlot)

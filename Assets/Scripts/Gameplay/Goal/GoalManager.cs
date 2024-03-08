@@ -4,15 +4,25 @@ using System.Linq;
 using Array2DEditor;
 using UnityEngine;
 
+public struct GoalCompleteEvent : IEvent
+{
+    public int goalWordIndex;
+}
+
+public struct GoalChangedEvent : IEvent
+{
+    public int goalWordIndex;
+    public int previousGoalWordIndex;
+    public int goalWordLength;
+}
+
 public class GoalManager : Singleton<GoalManager>
 {
     private List<LevelGoal> levelGoals = new List<LevelGoal>();
     private LevelGoal activeGoal;
-    public event Action<int> GoalWordCompleted;
-    public event Action<int,int,int> GoalWordChanged; //int goalWordIndex, int previousGoalWordIndex, int goalWordLength
 
     #region Unity Methods
-
+    EventBinding<LevelEvent> levelEventBinding;
     private void Start()
     {
         var goalWords = LevelManager.Instance.GetGoalWords();
@@ -20,7 +30,8 @@ public class GoalManager : Singleton<GoalManager>
         {
             levelGoals.Add(new LevelGoal(goalWords[i], i));
         }
-        LevelManager.Instance.LevelStarted += HandleLevelStarted;
+        levelEventBinding = new EventBinding<LevelEvent>(HandleLevelStarted);
+        EventBus<LevelEvent>.Register(levelEventBinding);
     }
 
     private void Update()
@@ -33,7 +44,7 @@ public class GoalManager : Singleton<GoalManager>
 
     private void OnDisable()
     {
-        LevelManager.Instance.LevelStarted -= HandleLevelStarted;
+        EventBus<LevelEvent>.Deregister(levelEventBinding);
     }
     #endregion
 
@@ -44,6 +55,7 @@ public class GoalManager : Singleton<GoalManager>
 
     private void HandleLevelStarted()
     {
+        Debug.Log("LEVEL STARTED");
         SetupFirstGoal();
     }
 
@@ -56,19 +68,19 @@ public class GoalManager : Singleton<GoalManager>
         LevelManager.Instance.SetGoalWordIndex(goalIndex);
         int previousGoalWordIndex = activeGoal.WordIndex;
         activeGoal = levelGoals[goalIndex];
-        GoalWordChanged?.Invoke(goalIndex, previousGoalWordIndex, levelGoals[goalIndex].GoalWord.Length);
+        EventBus<GoalChangedEvent>.Raise(new GoalChangedEvent(){goalWordIndex = goalIndex, previousGoalWordIndex = previousGoalWordIndex, goalWordLength = levelGoals[goalIndex].GoalWord.Length});
     }
     
     private void SetupFirstGoal()
     {
         LevelManager.Instance.SetGoalWordIndex(0);
         activeGoal = levelGoals[0];
-        GoalWordChanged?.Invoke(0, activeGoal.WordIndex, activeGoal.GoalWord.Length);
+        EventBus<GoalChangedEvent>.Raise(new GoalChangedEvent(){goalWordIndex = 0, previousGoalWordIndex = activeGoal.WordIndex, goalWordLength = activeGoal.GoalWord.Length});
     }
     
     private void CompleteGoal()
     {
-        GoalWordCompleted?.Invoke(activeGoal.WordIndex);
+        EventBus<GoalCompleteEvent>.Raise(new GoalCompleteEvent(){goalWordIndex = activeGoal.WordIndex});
         SetupNextGoal();
     }
     

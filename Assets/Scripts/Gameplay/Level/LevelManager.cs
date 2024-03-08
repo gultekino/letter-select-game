@@ -5,14 +5,18 @@ using System.Linq;
 using Array2DEditor;
 using UnityEngine;
 
+public struct LevelEvent : IEvent
+{
+}
+
 public class LevelManager : Singleton<LevelManager>
 {
     [SerializeField] LevelDataSO levelDataSO;
+    LevelProgress levelProgress;
     private LevelData levelData => levelDataSO.levelData;
     
-    LevelProgress levelProgress;
-    public event Action LevelStarted;
-
+    EventBinding<GoalCompleteEvent> goalCompleteEventBinding;
+    EventBinding<GoalChangedEvent> goalChangedEventBinding;
     protected override void Awake()
     {
         base.Awake();
@@ -22,21 +26,32 @@ public class LevelManager : Singleton<LevelManager>
     private IEnumerator InitializeLevel()
     {
         levelProgress = new LevelProgress(levelData.GoalWords.Count);
-        GoalManager.Instance.GoalWordCompleted += HandleWordCompletion;
-        GoalManager.Instance.GoalWordChanged += HandleGoalWordChanged;
+        goalCompleteEventBinding = new EventBinding<GoalCompleteEvent>(HandleWordCompletion);
+        EventBus<GoalCompleteEvent>.Register(goalCompleteEventBinding);
+        
+        goalChangedEventBinding = new EventBinding<GoalChangedEvent>(HandleGoalWordChanged);
+        EventBus<GoalChangedEvent>.Register(goalChangedEventBinding);
+        
         yield return null; // Ensures other managers are ready and subscribed
-        LevelStarted?.Invoke();
+        
+        EventBus<LevelEvent>.Raise(new LevelEvent());
     }
 
-    private void HandleGoalWordChanged(int goalWordIndex, int previousGoalWordIndex, int goalWordLength)
+    private void OnDisable()
     {
-        levelProgress.SetLevelWordStatus(goalWordIndex,LevelWordStatus.WordNotCompleted);
-        levelProgress.CurrentWordIndex = goalWordIndex;
+        EventBus<GoalCompleteEvent>.Deregister(goalCompleteEventBinding);
+        EventBus<GoalChangedEvent>.Deregister(goalChangedEventBinding);
     }
 
-    private void HandleWordCompletion(int wordIndexOnLevel)
+    private void HandleGoalWordChanged(GoalChangedEvent goalChangedEvent)
     {
-        UpdateWordCompletionStatus(wordIndexOnLevel,LevelWordStatus.WordCompleted);
+        levelProgress.SetLevelWordStatus(goalChangedEvent.goalWordIndex,LevelWordStatus.WordNotCompleted);
+        levelProgress.CurrentWordIndex = goalChangedEvent.goalWordIndex;
+    }
+
+    private void HandleWordCompletion(GoalCompleteEvent wordIndexOnLevel)
+    {
+        UpdateWordCompletionStatus(wordIndexOnLevel.goalWordIndex,LevelWordStatus.WordCompleted);
         CheckForLevelCompletion();
     }
     

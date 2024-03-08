@@ -1,10 +1,12 @@
 using System;
 
+public struct GameStateChanged : IEvent
+{
+    public GameState gameState;
+}
 public static class GameStateHandler
 {
     private static GameState currentGameState = GameState.PreGame;
-    public static event Action<GameState> OnGameStateChange;
-
     public static GameState GameState
     {
         get => currentGameState;
@@ -13,7 +15,7 @@ public static class GameStateHandler
             if (currentGameState == value) return;
 
             currentGameState = value;
-            OnGameStateChange?.Invoke(currentGameState);
+            EventBus<GameStateChanged>.Raise(new GameStateChanged(){gameState = currentGameState});
         }
     }
 

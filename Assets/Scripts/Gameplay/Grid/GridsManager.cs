@@ -14,7 +14,10 @@
         private bool newGoalCompleted = false;
         private bool isGoalChanging = false;
         Queue<IEnumerator> goalChangeQueue = new Queue<IEnumerator>();
-
+        
+        EventBinding<GoalChangedEvent> goalChangedEventBinding;
+        EventBinding<LetterClickedEvent> letterClickedEventBinding;
+        
         #region Initialization
 
         private void Start()
@@ -45,23 +48,26 @@
         
         private void SubscribeEvents()
         {
-            LetterManager.Instance.OnLetterClicked += LetterClicked;
-            GoalManager.Instance.GoalWordChanged += HandleGoalWordChanged;
+            goalChangedEventBinding = new EventBinding<GoalChangedEvent>(HandleGoalWordChanged);
+            EventBus<GoalChangedEvent>.Register(goalChangedEventBinding);
+            
+            letterClickedEventBinding = new EventBinding<LetterClickedEvent>(LetterClicked);
+            EventBus<LetterClickedEvent>.Register(letterClickedEventBinding);
         }
 
         private void UnsubscribeEvents()
         {
-            LetterManager.Instance.OnLetterClicked -= LetterClicked;
-            GoalManager.Instance.GoalWordChanged -= HandleGoalWordChanged;
+            EventBus<GoalChangedEvent>.Deregister(goalChangedEventBinding);
+            EventBus<LetterClickedEvent>.Deregister(letterClickedEventBinding);
         }
         #endregion
 
         #endregion
 
         #region GoalWordChanged
-         private void HandleGoalWordChanged(int goalWordIndex, int previousGoalWordIndex, int goalWordLength)
+         private void HandleGoalWordChanged(GoalChangedEvent goalChangedEvent)
         {
-            goalChangeQueue.Enqueue(GoalWordChanged(goalWordIndex, previousGoalWordIndex, goalWordLength));
+            goalChangeQueue.Enqueue(GoalWordChanged(goalChangedEvent.goalWordIndex, goalChangedEvent.previousGoalWordIndex, goalChangedEvent.goalWordLength));
             StartCoroutine(HandleGoalWordChanges());
         }
      
@@ -138,22 +144,22 @@
         #endregion
        
         
-        private void LetterClicked(LetterCarrier letterCarrier)
+        private void LetterClicked(LetterClickedEvent letterCarrier)
         {
             var emptySlot = gridB.GetEmptySlot();
             
             if (emptySlot == null || isGoalChanging) //Blocks input while goal is changing
                 return; 
             
-            var letterCarrierSlot = letterCarrier.CarryingSlot;
-            var letterIndexInTheGoal = GoalManager.Instance.TryGetIndexOfLetterInTheGoal(letterCarrier);
+            var letterCarrierSlot = letterCarrier.letterCarrier.CarryingSlot;
+            var letterIndexInTheGoal = GoalManager.Instance.TryGetIndexOfLetterInTheGoal(letterCarrier.letterCarrier);
             if (letterIndexInTheGoal != -1)//If the letter is in the goal grid
             {
-                PlaceLetterInGoalGrid(letterCarrier,letterIndexInTheGoal);
+                PlaceLetterInGoalGrid(letterCarrier.letterCarrier,letterIndexInTheGoal);
             }
             else
             {
-                LetterManager.Instance.MoveLetterGridB(letterCarrier, emptySlot);
+                LetterManager.Instance.MoveLetterGridB(letterCarrier.letterCarrier, emptySlot);
             }
             gridA.AlignLettersToDown(letterCarrierSlot);
         }
