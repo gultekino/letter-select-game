@@ -7,9 +7,9 @@ public class TableGridHandler : GridHandler
 {
     [SerializeField] private List<Vector2> twoLineCenterPositions;
     [SerializeField] private List<Vector2> threeLineCenterPositions;
-    //[SerializeField] private float offsetBetweenWords;
     [SerializeField] private int maxLettersInLine;
-
+    private List<List<Slot>> tableSlots = new List<List<Slot>>();
+    
     public override void InitializeGrid(int row = -1)
     {
         var goalWords = LevelManager.Instance.GetGoalWords();
@@ -44,6 +44,7 @@ public class TableGridHandler : GridHandler
             var configuration = new GridConfiguration(goalWord.Length, 1, currentPosition, gridConfiguration.TargetScale, gridConfiguration.OffsetBetweenSlots);
             var slots = spawner.SpawnGrid(configuration, slotPrefab, slotsParent, slotLocation, currentPosition);
             Slots.AddRange(slots);
+            tableSlots.Add(slots);
             currentPosition.x += goalWord.Length * gridConfiguration.OffsetBetweenSlots.x + gridConfiguration.OffsetBetweenSlots.x;
         }
     }
@@ -98,4 +99,30 @@ public class TableGridHandler : GridHandler
         return wordsDistribution;
     }
 
+    public void FillWordInTable(List<Slot> goalSlots, int goalWordIndex)
+    {
+        var tableSlot = tableSlots[goalWordIndex];
+        for (int i = 0; i < goalSlots.Count; i++)
+        {
+            var slot = goalSlots[i];
+            var letterCarrier = slot.GetCarriedItem();
+            if (letterCarrier)
+            {
+                PlaceLetterInTableGrid(letterCarrier, i, goalWordIndex);
+            }
+        }
+    }
+
+    private void PlaceLetterInTableGrid(LetterCarrier letterCarrier, int i, int goalWordIndex)
+    {
+        letterCarrier.CarryingSlot.EmptySlot();
+        var slot = tableSlots[goalWordIndex][i];
+        slot.CarryItem(letterCarrier);
+        letterCarrier.GetCarried(slot);
+    }
+
+    public List<Slot> GetTableSlotsForGoal(int wordIndex)
+    {
+        return tableSlots[wordIndex];
+    }
 }

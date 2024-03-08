@@ -4510,10 +4510,6 @@ PrefabInstance:
       propertyPath: slotsParent
       value: 
       objectReference: {fileID: 906669052}
-    - target: {fileID: 3842517430471764259, guid: c6ec754d02f0c48e39b693c252d40780, type: 3}
-      propertyPath: tableParent
-      value: 
-      objectReference: {fileID: 1507281908}
     - target: {fileID: 3899250571221761510, guid: c6ec754d02f0c48e39b693c252d40780, type: 3}
       propertyPath: slotsParent
       value: 
