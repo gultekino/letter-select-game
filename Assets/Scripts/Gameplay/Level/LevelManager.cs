@@ -26,15 +26,17 @@ public class LevelManager : Singleton<LevelManager>
     private IEnumerator InitializeLevel()
     {
         levelProgress = new LevelProgress(levelData.GoalWords.Count);
+        yield return null; // Ensures other managers are ready and subscribed
+        EventBus<LevelEvent>.Raise(new LevelEvent());
+    }
+
+    private void OnEnable()
+    {
         goalCompleteEventBinding = new EventBinding<GoalCompleteEvent>(HandleWordCompletion);
         EventBus<GoalCompleteEvent>.Register(goalCompleteEventBinding);
         
         goalChangedEventBinding = new EventBinding<GoalChangedEvent>(HandleGoalWordChanged);
         EventBus<GoalChangedEvent>.Register(goalChangedEventBinding);
-        
-        yield return null; // Ensures other managers are ready and subscribed
-        
-        EventBus<LevelEvent>.Raise(new LevelEvent());
     }
 
     private void OnDisable()

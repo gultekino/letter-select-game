@@ -30,8 +30,6 @@ public class GoalManager : Singleton<GoalManager>
         {
             levelGoals.Add(new LevelGoal(goalWords[i], i));
         }
-        levelEventBinding = new EventBinding<LevelEvent>(HandleLevelStarted);
-        EventBus<LevelEvent>.Register(levelEventBinding);
     }
 
     private void Update()
@@ -40,6 +38,12 @@ public class GoalManager : Singleton<GoalManager>
         {
             ChangeGoalToNext();
         }
+    }
+
+    private void OnEnable()
+    {
+        levelEventBinding = new EventBinding<LevelEvent>(HandleLevelStarted);
+        EventBus<LevelEvent>.Register(levelEventBinding);
     }
 
     private void OnDisable()
@@ -55,7 +59,6 @@ public class GoalManager : Singleton<GoalManager>
 
     private void HandleLevelStarted()
     {
-        Debug.Log("LEVEL STARTED");
         SetupFirstGoal();
     }
 
