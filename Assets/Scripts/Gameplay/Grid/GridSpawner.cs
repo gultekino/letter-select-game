@@ -23,4 +23,23 @@ public class GridSpawner
         }
         return regularSlots;
     }
+    
+    public List<Slot> SpawnGrid(GridConfiguration gridConfigurationData,GameObject slotPrefab,Transform gridSlotsParent, SlotLocation slotLocation, Vector2 startingPosition)
+    {
+        List<Slot> regularSlots = new List<Slot>();
+        for (int column = 0; column < gridConfigurationData.Column; column++)
+        {
+            for (int row = 0; row < gridConfigurationData.Row; row++)
+            {
+                float x = row * gridConfigurationData.OffsetBetweenSlots.x;
+                float y = column * gridConfigurationData.OffsetBetweenSlots.y;
+                Vector2 move = startingPosition + new Vector2(x, y);
+                regularSlots.Add(new Slot(new Vector2(row, column), false,move,slotLocation,gridConfigurationData.TargetScale));
+                var gridSlot =  Object.Instantiate(slotPrefab, gridSlotsParent);
+                gridSlot.transform.position = move;
+                
+            }
+        }
+        return regularSlots;
+    }
 }

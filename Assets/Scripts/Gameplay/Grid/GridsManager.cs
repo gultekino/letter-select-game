@@ -8,7 +8,7 @@
     {
         [SerializeField] List<GridHandler> gridHandlers;
         [SerializeField] private GoalGridHandler goalGridHandler;
-        
+        [SerializeField] private TableGridHandler tableGridHandler;
         private GridHandler gridA;
         private GridHandler gridB;
         private bool newGoalCompleted = false;
@@ -26,6 +26,7 @@
         {
             gridA = gridHandlers[0];
             gridB = gridHandlers[1];
+            tableGridHandler.InitializeGrid();
             gridA.InitializeGrid();
             gridB.InitializeGrid();
             gridA.FillGridWithLetterCarriers();

@@ -6,13 +6,14 @@ using UnityEngine;
 public class TableManager : Singleton<TableManager>
 {
     [SerializeField] private GameObject tablePiecePrefab;
-    [SerializeField] private LevelDataSO levelDataSO;
     [SerializeField] private Transform tableParent;
 
     List<TablePiece> tablePieces = new List<TablePiece>();
-    private int howManyLettersFit = 4;
-    private int paddingBetweenTablePieces = 1;
     private Vector2 tableOffset = new Vector2(0, 10);
+    
+    private int maxWordsOnRow = 3;
+    private int maxLettersOnRow = 10;
+    private float paddingBetweenTablePieces = 0.5f;
     
     private void Start()
     {
@@ -21,7 +22,7 @@ public class TableManager : Singleton<TableManager>
 
     private void InitializeTable()
     {
-        var goalWords = levelDataSO.levelData.GoalWords;
+        var goalWords = LevelManager.Instance.GetGoalWords();
         int letterCount = 0, newLineCount = 0;
 
         for (var i = 0; i < goalWords.Count; i++)
@@ -30,16 +31,16 @@ public class TableManager : Singleton<TableManager>
             AdjustForNewLine(ref letterCount, goalWord.Length, ref newLineCount);
 
             Vector2 startPosition = CalculateStartPosition(newLineCount);
-            var gridConfiguration = new GridConfiguration(goalWord.Length, 1, startPosition);
-            var slots = CreateGridSlots(gridConfiguration);
+           // var gridConfiguration = new GridConfiguration(goalWord.Length, 1, startPosition);
+           // var slots = CreateGridSlots(gridConfiguration);
 
-            tablePieces.Add(new TablePiece(slots, newLineCount, startPosition));
+          //  tablePieces.Add(new TablePiece(slots, newLineCount, startPosition));
         }
     }
     private void AdjustForNewLine(ref int currentLetterCount, int wordLength, ref int lineCount)
     {
         currentLetterCount += wordLength;
-        if (currentLetterCount > howManyLettersFit)
+        if (currentLetterCount > maxLettersOnRow)
         {
             lineCount++;
             currentLetterCount = wordLength;
@@ -78,10 +79,5 @@ public class TableManager : Singleton<TableManager>
                 letterCarrier.GetCarried(tableSlots[i]);
             }
         }
-    }
-
-    public List<Slot> GetWordSlotsInTable(int goalWordIndex)
-    {
-        return tablePieces[goalWordIndex].Slots;
     }
 }

@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class GridHandler : MonoBehaviour
 {
-    [SerializeField] GridConfiguration gridConfiguration;
-    [SerializeField] GameObject slotPrefab;
-    [SerializeField] Transform slotsParent;
-    [SerializeField] private SlotLocation slotLocation;
+    [SerializeField] protected GridConfiguration gridConfiguration;
+    [SerializeField] protected GameObject slotPrefab;
+    [SerializeField] protected Transform slotsParent;
+    [SerializeField] protected private SlotLocation slotLocation;
 
     public List<Slot> Slots { get; private set; } = new List<Slot>();
 
-    public void InitializeGrid(int row = -1)
+    public virtual void InitializeGrid(int row = -1)
     {
         if (row!=-1){
             gridConfiguration.Row = row;

@@ -15,9 +15,10 @@ MonoBehaviour:
   levelData:
     levelName: Level0
     goalWords:
-    - LAAL
-    - LLLLA
-    - PATATES
+    - ASDEF
+    - ASDEF
+    - ASDEF
+    - ASDEF
     gridMap:
       gridSize: {x: 6, y: 6}
       cellSize: {x: 16, y: 16}
