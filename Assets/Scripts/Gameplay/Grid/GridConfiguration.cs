@@ -19,10 +19,17 @@ public class GridConfiguration
     public Vector2 GridCenterPosition => gridCenterPosition;
     public Vector2 TargetScale => targetScale;
     public Vector2 OffsetBetweenSlots => offsetBetweenSlots;
-    public GridConfiguration(int row, int column, Vector2 gridCenterPosition)
+    public GridConfiguration(int row, int column, Vector2 gridCenterPosition, Vector2 targetScale, Vector2 offsetBetweenSlots)
     {
         this.row = row;
         this.column = column;
+        this.gridCenterPosition = gridCenterPosition;
+        this.targetScale = targetScale;
+        this.offsetBetweenSlots = offsetBetweenSlots;
+    }
+    
+    public void SetGridCenterPosition(Vector2 gridCenterPosition)
+    {
         this.gridCenterPosition = gridCenterPosition;
     }
 }

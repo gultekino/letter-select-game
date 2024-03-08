@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class GridHandler : MonoBehaviour
 {
-    [SerializeField] GridConfiguration gridConfiguration;
-    [SerializeField] GameObject slotPrefab;
-    [SerializeField] Transform slotsParent;
-    [SerializeField] private SlotLocation slotLocation;
+    [SerializeField] protected GridConfiguration gridConfiguration;
+    [SerializeField] protected GameObject slotPrefab;
+    [SerializeField] protected Transform slotsParent;
+    [SerializeField] protected private SlotLocation slotLocation;
 
     public List<Slot> Slots { get; private set; } = new List<Slot>();
 
-    public void InitializeGrid(int row = -1)
+    public virtual void InitializeGrid(int row = -1)
     {
         if (row!=-1){
             gridConfiguration.Row = row;
@@ -29,28 +29,20 @@ public class GridHandler : MonoBehaviour
 
     private int GetIndex(Vector2 gridPosition)
     {
-        return gridConfiguration.Row * (int)gridPosition.x + (int)gridPosition.y;
+        return gridConfiguration.Row * (int)gridPosition.y + (int)gridPosition.x;
     }
 
     public void FillGridWithLetterCarriers()
     {
-        var letterFrequency = GoalManager.Instance.GetLetterFrequencies().
-            Select(frequency => new LetterFrequency(frequency.Letter,frequency.Frequency) ).ToList(); //copy of the list so on editor id doesn't override the original list
+        var letterMap = GoalManager.Instance.GetGridMap().ToList(); //copy of the list so on editor id doesn't override the original list
         
-        letterFrequency.ForEach(obj => obj.Frequency += Random.Range(1, 3));
-        
-        foreach (var letter in letterFrequency)
+        for (int i = 0; i < letterMap.Count; i++)
         {
-            for (int i = 0; i < letter.Frequency; i++)
-            {
-                var slot = GetEmptySlot();
-                if (slot == null){
-                    Debug.Log("No empty slot left!");
-                    break;
-                }
-                var letterCarrier = LetterManager.Instance.SpawnLetterCarrier(slot, letter.Letter);
-                slot.CarryItem(letterCarrier);
-            }
+            if (letterMap[i] == "")
+                continue;
+            var slot = Slots[i];
+            var letterCarrier = LetterManager.Instance.SpawnLetterCarrier(slot, letterMap[i][0]);
+            slot.CarryItem(letterCarrier);
         }
     }
 
@@ -103,6 +95,14 @@ public class GridHandler : MonoBehaviour
             {
                 Slots[i].SwapItemsWith(Slots[i + gridConfiguration.Row]);
             }
+        }
+    }
+
+    public void AlignAllLettersToDown()
+    {
+        for (int i = 0; i < gridConfiguration.Row; i++)
+        {
+            AlignLettersToDown(GetSlot(new Vector2(i,0)));
         }
     }
 }

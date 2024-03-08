@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Array2DEditor;
 using UnityEngine;
 
 public class GoalManager : Singleton<GoalManager>
@@ -35,11 +36,6 @@ public class GoalManager : Singleton<GoalManager>
         LevelManager.Instance.LevelStarted -= HandleLevelStarted;
     }
     #endregion
-   
-    public List<LetterFrequency> GetLetterFrequencies()
-    {
-        return LevelManager.Instance.GetLetterFrequencies();
-    }
 
     private void ChangeGoalToNext()
     {
@@ -103,5 +99,10 @@ public class GoalManager : Singleton<GoalManager>
         activeGoal.MarkLetterAsFilled(letterIndexInTheGoal);
         if (activeGoal.IsGoalCompleted())
             CompleteGoal();
+    }
+
+    public Array2DString GetGridMap()
+    {
+        return LevelManager.Instance.GetGridMap();
     }
 }

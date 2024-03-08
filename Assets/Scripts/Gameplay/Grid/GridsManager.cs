@@ -8,7 +8,7 @@
     {
         [SerializeField] List<GridHandler> gridHandlers;
         [SerializeField] private GoalGridHandler goalGridHandler;
-        
+        [SerializeField] private TableGridHandler tableGridHandler;
         private GridHandler gridA;
         private GridHandler gridB;
         private bool newGoalCompleted = false;
@@ -26,9 +26,11 @@
         {
             gridA = gridHandlers[0];
             gridB = gridHandlers[1];
+            tableGridHandler.InitializeGrid();
             gridA.InitializeGrid();
             gridB.InitializeGrid();
             gridA.FillGridWithLetterCarriers();
+            gridA.AlignAllLettersToDown();
         }
         #region Events Subscriptions
         private void OnEnable()
@@ -81,22 +83,24 @@
         private IEnumerator GoalWordChanged(int goalWordIndex, int previousGoalWordIndex, int goalWordLength)
         {
             var goalSlots = goalGridHandler.Slots;
-            yield return MoveGoalToTable(previousGoalWordIndex,goalSlots);
+            yield return MoveGoalToTable(goalSlots, previousGoalWordIndex);
             goalGridHandler.DestroySlotsParent();
             goalGridHandler.InitializeGrid(goalWordLength);
             yield return MoveTableToGoalGrid(goalWordIndex);
             yield return MoveGridBToGoalGrid();
         }
 
-        private IEnumerator MoveGoalToTable(int goalWordIndex, List<Slot> goalSlots)
+        private IEnumerator MoveGoalToTable(List<Slot> goalSlots, int goalWordIndex)
         {
             yield return new WaitForSeconds(0.5f);
-            TableManager.Instance.FillWordInTable(goalSlots, goalWordIndex);
+            //TableManager.Instance.FillWordInTable(goalSlots, goalWordIndex);
+            tableGridHandler.FillWordInTable(goalSlots, goalWordIndex);
         }
         
         private IEnumerator MoveTableToGoalGrid(int wordIndex)
         {
-            var tableSlots = TableManager.Instance.GetTableSlotsForGoal(wordIndex);
+            //var tableSlots = TableManager.Instance.GetTableSlotsForGoal(wordIndex);
+            var tableSlots = tableGridHandler.GetTableSlotsForGoal(wordIndex);
             yield return new WaitForSeconds(0.6f);
             for (var index = 0; index < tableSlots.Count; index++)
             {
@@ -157,7 +161,7 @@
         private void PlaceLetterInGoalGrid(LetterCarrier letterCarrier, int indexOfLetter)
         {
             letterCarrier.CarryingSlot.EmptySlot();
-            var slot = goalGridHandler.GetSlot(new Vector2(0, indexOfLetter));
+            var slot = goalGridHandler.GetSlot(new Vector2(indexOfLetter, 0));
             slot.CarryItem(letterCarrier);
             letterCarrier.GetCarried(slot);
             GoalManager.Instance.LetterInGoalSelected(indexOfLetter);
