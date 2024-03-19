@@ -2,11 +2,12 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+#region EventData
 public struct LetterClickedEvent : IEvent
 {
     public LetterCarrier letterCarrier;
 }
-
+#endregion
 public class LetterManager : Singleton<LetterManager>
 {
     [SerializeField] LetterCarrier letterCarrierPrefab;

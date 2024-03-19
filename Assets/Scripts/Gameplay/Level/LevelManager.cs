@@ -5,9 +5,12 @@ using System.Linq;
 using Array2DEditor;
 using UnityEngine;
 
+#region EventData
 public struct LevelEvent : IEvent
 {
 }
+
+#endregion
 
 public class LevelManager : Singleton<LevelManager>
 {

@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Array2DEditor;
 using UnityEngine;
+using UnityEngine.UI;
+
+#region EventData
 
 public struct GoalCompleteEvent : IEvent
 {
@@ -15,6 +18,8 @@ public struct GoalChangedEvent : IEvent
     public int previousGoalWordIndex;
     public int goalWordLength;
 }
+
+#endregion
 
 public class GoalManager : Singleton<GoalManager>
 {
